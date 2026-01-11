@@ -1,0 +1,4962 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R4 Project Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h1 {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: auto;
+            padding: 9px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #6b8cff 100%);
+            color: white;
+            border: none;
+            outline: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            outline: none;
+        }
+
+        .btn:focus {
+            outline: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #90a4b8 0%, #6b7fa1 100%);
+            box-shadow: 0 3px 10px rgba(107, 127, 161, 0.25);
+            outline: none;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-secondary:focus {
+            outline: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ea44f 0%, #2fbf6d 100%);
+            box-shadow: 0 3px 10px rgba(46, 164, 79, 0.25);
+            outline: none;
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-success:focus {
+            outline: none;
+        }
+
+        /* Link chips */
+        .chip-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 6px 0;
+            width: 100%;
+        }
+        .chip-row {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            border: 1px solid #cbd5ff;
+            border-radius: 18px;
+            padding: 6px 10px;
+            min-height: 40px;
+            background: #fff;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: #eef2ff;
+            border: 1px solid #cbd5ff;
+            border-radius: 14px;
+            font-size: 12px;
+            color: #2f3b8f;
+            align-self: flex-start;
+        }
+        .chip-row input[type="text"] {
+            border: none;
+            outline: none;
+            width: 100%;
+            min-width: 0;
+            padding: 4px 2px;
+            font-size: 13px;
+            background: transparent;
+        }
+        .chip a {
+            color: inherit;
+            text-decoration: none;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .chip-remove {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #555;
+            font-size: 12px;
+        }
+        .chip-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 6px;
+        }
+        .chip-input-row input {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e04b5a 0%, #c53a4a 100%);
+            box-shadow: 0 3px 10px rgba(224, 75, 90, 0.25);
+            outline: none;
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-danger:focus {
+            outline: none;
+        }
+
+        .btn-small {
+            padding: 8px 14px;
+            font-size: 13px;
+            border: none;
+            outline: none;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: auto;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+
+        .btn-small:active {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95) translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-loading {
+            position: relative;
+            opacity: 0.75;
+            cursor: wait;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            width: 14px;
+            height: 14px;
+            margin-top: -7px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+            .btn-ghost {
+                padding: 7px 12px;
+                border-radius: 10px;
+                background: linear-gradient(135deg, #eef2f7 0%, #dbe3f0 100%);
+                color: #1f2937;
+                border: 1px solid #c7d2e3;
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 6px rgba(27, 40, 59, 0.12);
+                font-weight: 600;
+                gap: 6px;
+            }
+            .btn-ghost:hover {
+                background: linear-gradient(135deg, #f5f7fb 0%, #e4ebf5 100%);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 3px 8px rgba(27, 40, 59, 0.15);
+            }
+            .btn-ghost:active {
+                transform: translateY(0);
+                box-shadow: inset 0 2px 4px rgba(27, 40, 59, 0.2);
+            }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            outline: none;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-add:focus {
+            outline: none;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Main App */
+        .app-container {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .app-container.active {
+            display: flex;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info span {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .btn-mypage {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-mypage:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-mypage:focus {
+            outline: none;
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-logout:focus {
+            outline: none;
+        }
+
+        /* Ticket Search Bar */
+        .ticket-search-bar {
+            display: flex;
+            gap: 6px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+        }
+
+        .ticket-search-bar select {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            background: white;
+            cursor: pointer;
+            max-width: 120px;
+        }
+
+        .ticket-sort-bar {
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+            align-items: center;
+        }
+
+        .ticket-sort-bar label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #495057;
+            white-space: nowrap;
+        }
+
+        .ticket-sort-bar select {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 12px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .ticket-search-bar input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            min-width: 0;
+        }
+
+        .ticket-search-bar button {
+            padding: 6px 10px;
+            border: none;
+            outline: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            min-width: 32px;
+        }
+
+        .ticket-search-bar button:focus {
+            outline: none;
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+        }
+
+        .btn-clear:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Ticket List */
+        .ticket-list {
+            width: 28%;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #ticketList {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .status-filter-bar {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 6px;
+            padding: 10px;
+            border-top: 2px solid #e0e0e0;
+            background: #f8f9fa;
+            overflow-x: auto;
+        }
+
+        .status-filter-btn {
+            flex: 1;
+            white-space: nowrap;
+            padding: 6px 8px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            color: #495057;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .status-filter-btn:hover {
+            border-color: #adb5bd;
+            background: #f8f9fa;
+        }
+
+        .status-filter-btn.active {
+            background: #007bff;
+            border-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+
+        .status-filter-btn .count {
+            display: inline-block;
+            margin-left: 4px;
+            padding: 1px 6px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-filter-btn.active .count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .pagination-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            font-size: 12px;
+        }
+
+        .pagination-info {
+            color: #6c757d;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .pagination-btn {
+            padding: 4px 10px;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            color: #495057;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+
+        .ticket-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .ticket-item:hover {
+            background: #f8f9fa;
+        }
+
+        .ticket-item.active {
+            background: #e7f1ff;
+            border-left: 4px solid #667eea;
+        }
+
+        .ticket-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .ticket-item-first-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            gap: 8px;
+        }
+
+        .ticket-item-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ticket-item-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .priority-badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .issue-type-badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #eef2ff;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+        }
+
+        .issue-task {
+            background: #e8f7ff;
+            color: #075985;
+            border-color: #bae6fd;
+        }
+
+        .issue-bug {
+            background: #ffe8e8;
+            color: #b91c1c;
+            border-color: #fecdd3;
+        }
+
+        .issue-feature {
+            background: #ecfdf3;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        .issue-story {
+            background: #f5f3ff;
+            color: #5b21b6;
+            border-color: #ddd6fe;
+        }
+
+        .issue-epic {
+            background: #fff7ed;
+            color: #c2410c;
+            border-color: #fed7aa;
+        }
+
+        .issue-default {
+            background: #eef2ff;
+            color: #374151;
+            border-color: #e2e8f0;
+        }
+
+        .project-badge {
+            background: #eef2ff;
+            color: #4c51bf;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .priority-K1 {
+            background: #fee;
+            color: #c33;
+        }
+
+        .priority-K2 {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .priority-K3 {
+            background: #dfe6e9;
+            color: #636e72;
+        }
+
+        .ticket-id {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .ticket-status {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-triage {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-inprogress {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-done {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .ticket-summary {
+            font-weight: 500;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .matched-fields {
+            font-size: 11px;
+            color: #667eea;
+            background: #e7f1ff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .ticket-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: #666;
+            padding-left: 0;
+        }
+
+        .ticket-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Ticket Detail */
+        .ticket-detail {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .ticket-detail-empty {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .ticket-detail-content {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-title {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .detail-title h2 {
+            color: #111827;
+            margin: 0;
+            font-size: 20px;
+            flex: 1;
+            min-width: 0;
+            line-height: 1.32;
+        }
+
+        .detail-title-main {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            width: 100%;
+        }
+
+        .ticket-meta-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .ticket-meta-sep {
+            color: #d1d5db;
+        }
+
+        .ticket-context {
+            font-weight: 700;
+            color: #4c51bf;
+            background: transparent;
+            padding: 2px 0;
+            border-radius: 0;
+            white-space: nowrap;
+            font-size: 20px;
+            line-height: 1.32;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* List view context sizing */
+        .ticket-list .ticket-context {
+            font-size: 14px;
+            padding: 0;
+            color: #4b5563;
+        }
+
+        .detail-actions {
+            position: relative;
+        }
+
+        .detail-menu-button {
+            padding: 8px 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f8fafc;
+            color: #1f2937;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+        }
+
+        .detail-menu-button::after {
+            content: '▾';
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .detail-menu-button:focus {
+            outline: none;
+            border-color: #cbd5e1;
+        }
+
+        .detail-menu-dropdown {
+            position: absolute;
+            right: 0;
+            margin-top: 6px;
+            min-width: 140px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+            padding: 6px;
+            display: none;
+            z-index: 10;
+        }
+
+        .detail-menu-dropdown.show {
+            display: block;
+        }
+
+        .detail-menu-item {
+            width: 100%;
+            padding: 8px 10px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 500;
+            color: #b91c1c;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .detail-menu-item:hover {
+            background: #fee2e2;
+        }
+
+        .detail-info {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px 18px;
+            margin-bottom: 22px;
+        }
+
+        .info-item {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #111827;
+            font-weight: 500;
+            width: 100%;
+            display: block;
+            background: #f9fafb;
+            padding: 9px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            min-height: 42px;
+            line-height: 1.4;
+            box-sizing: border-box;
+        }
+
+        .editable {
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .editable:hover {
+            background: #f0f0f0;
+        }
+
+        .editable:hover::after {
+            content: '✏️';
+            position: absolute;
+            right: 8px;
+            font-size: 12px;
+        }
+
+        .editing {
+            background: #f0f9ff;
+            outline: none;
+            box-shadow: 0 0 0 2px #bae6fd;
+        }
+
+        .editable.editing::after,
+        .editable.editing:hover::after {
+            content: none;
+        }
+
+        .editable input,
+        .editable select {
+            width: 100%;
+            padding: 0 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 500;
+            color: #111827;
+            background: #f9fafb;
+            box-sizing: border-box;
+            line-height: 1.4;
+            height: 42px;
+            min-height: 42px;
+        }
+
+        .editable textarea {
+            width: 100%;
+            padding: 16px 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 500;
+            color: #111827;
+            background: #f9fafb;
+            box-sizing: border-box;
+            line-height: 1.5;
+            min-height: 280px;
+        }
+
+        .editable input:focus,
+        .editable select:focus,
+        .editable textarea:focus {
+            outline: none;
+            border-color: #cbd5e1;
+            box-shadow: none;
+        }
+
+        .editable textarea {
+            resize: vertical;
+        }
+
+        .save-indicator {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
+
+        .detail-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .description-content {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            line-height: 1.6;
+            color: #555;
+            white-space: pre-wrap; /* preserve newlines in description */
+        }
+
+        /* Comments */
+        .comment-list {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .comment-item {
+            padding: 12px 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #475569;
+            font-size: 13px;
+        }
+
+        .comment-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .comment-date {
+            white-space: nowrap;
+        }
+
+        .comment-icon-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            border-radius: 6px;
+            background: transparent;
+            color: #94a3b8;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .comment-icon-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .comment-content {
+            color: #1f2937;
+            line-height: 1.4;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+
+        .comment-edit-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-form button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            align-self: flex-end;
+        }
+
+        .comment-form button:hover {
+            background: #5568d3;
+        }
+
+        .rich-editor {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            box-sizing: border-box;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-y: auto;
+            outline: none;
+        }
+
+        .rich-editor:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .rich-editor[data-placeholder]:empty::before,
+        .rich-editor[data-placeholder].is-empty::before {
+            content: attr(data-placeholder);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .comment-form .rich-editor {
+            min-height: 80px;
+            border-radius: 5px;
+            border-color: #ddd;
+        }
+
+        .comment-edit-area {
+            min-height: 160px;
+            margin-bottom: 8px;
+        }
+
+        .inline-image {
+            display: inline-block;
+            margin: 4px 0;
+            border-radius: 6px;
+            background: #f1f5f9;
+            padding: 4px;
+            line-height: 0;
+        }
+
+        .inline-image img {
+            border-radius: 4px;
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .rich-text-image {
+            margin-top: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #ffffff;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .rich-text-image img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            background: #f8fafc;
+        }
+
+        /* Attachments */
+        .attachment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .attachment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .attachment-item:hover {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+        }
+
+        .attachment-main {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .attachment-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .attachment-icon {
+            width: 16px;
+            height: 16px;
+            margin-top: 4px;
+            color: #4f46e5;
+        }
+
+        .attachment-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .attachment-icon path {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .attachment-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .attachment-name-group {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+            min-width: 0;
+        }
+
+        .attachment-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .attachment-size {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+
+        .attachment-date {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .attachment-delete {
+            border: none;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .attachment-delete:hover {
+            background: #fecaca;
+        }
+
+        .attachment-upload {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .attachment-upload input[type="file"] {
+            flex: 1;
+        }
+
+        .attachment-upload button {
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .attachment-upload button:hover {
+            background: #218838;
+        }
+
+        .attachment-dropzone {
+            margin-top: 10px;
+            padding: 18px;
+            border: 2px dashed #d0d7ff;
+            border-radius: 10px;
+            background: #f8f9ff;
+            text-align: center;
+            color: #4b5563;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .attachment-dropzone:hover,
+        .attachment-dropzone.drag-over {
+            background: #eef2ff;
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+            color: #334155;
+        }
+
+        .attachment-dropzone input[type="file"] {
+            display: none;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 820px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 20px;
+            align-items: flex-end;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+        }
+
+        /* My Page as full page */
+        .mypage-container-page {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+            background: #f5f5f5;
+        }
+
+        .mypage-container-page.active {
+            display: flex;
+        }
+
+        .mypage-header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mypage-header h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .mypage-main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: hidden;
+        }
+
+        /* My Page Tab Layout */
+        .mypage-container {
+            display: flex;
+            height: 100%;
+            gap: 0;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .mypage-sidebar {
+            width: 200px;
+            background: #f8f9fa;
+            border-right: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow-y: auto;
+        }
+
+        .mypage-tab {
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            outline: none;
+            border-left: 3px solid transparent;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .mypage-tab:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .mypage-tab:focus {
+            outline: none;
+        }
+
+        .mypage-tab.active {
+            background: white;
+            border-left-color: #667eea;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .mypage-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Project ID Suggestions */
+        .suggestion-container {
+            margin-top: 8px;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 4px;
+            border: 1px solid #d0e8ff;
+        }
+
+        .suggestion-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .suggestion-chip {
+            padding: 4px 12px;
+            background: white;
+            border: 1px solid #667eea;
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .input-hint {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        /* Modern Table Styles */
+        .project-table,
+        .user-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .project-table thead,
+        .user-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .project-table thead th,
+        .user-table thead th {
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 16px 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+
+        .project-table tbody tr,
+        .user-table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .project-table tbody tr:last-child,
+        .user-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .project-table tbody tr:nth-child(even),
+        .user-table tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        .project-table tbody tr:hover,
+        .user-table tbody tr:hover {
+            background: #f0f4ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .project-table tbody td,
+        .user-table tbody td {
+            padding: 16px 20px;
+            color: #333;
+            font-size: 14px;
+            vertical-align: middle;
+            border: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .project-table tbody td:first-child,
+        .user-table tbody td:first-child {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .role-select {
+            padding: 8px 12px;
+            border: 1px solid #d9e1f2;
+            border-radius: 6px;
+            background: #f8f9ff;
+            color: #334155;
+            font-size: 13px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+            min-width: 140px;
+        }
+
+        .role-select:disabled {
+            background: #f0f2f5;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Expandable description */
+        .description-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: help;
+        }
+
+        .description-cell:hover {
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        /* Role badge styling */
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .role-badge.role-0 {
+            background: #fee;
+            color: #c33;
+        }
+
+        .role-badge.role-1 {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .role-badge.role-2 {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .role-badge.role-3 {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        /* Action button in table */
+        .table-action-btn {
+            padding: 8px 16px;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-action-btn:focus {
+            outline: none;
+        }
+
+        .table-action-btn.btn-edit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .table-action-btn.btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .table-action-btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Empty table state */
+        .table-empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .table-empty-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <h1>R4 Project Manager</h1>
+            <form id="loginForm" method="post" action="javascript:void(0);" autocomplete="on">
+                <div class="form-group">
+                    <label for="username">User ID</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div id="loginError" class="error-message"></div>
+            </form>
+            <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 5px; font-size: 13px;">
+                <strong>Demo Credentials:</strong><br>
+                User ID: root / Password: 0000 (Role: 3 - Root)<br>
+                User ID: user1 / Password: pass (Role: 1 - User)<br>
+                User ID: user2 / Password: pass (Role: 2 - Manager)
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="appContainer" class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 R4 Project Manager</h1>
+            <div class="user-info">
+                <span id="currentUser">User</span>
+                <button class="btn-mypage" onclick="openMyPage()">My Page</button>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Save Indicator -->
+        <div id="saveIndicator" class="save-indicator">✓ Saved</div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Ticket List -->
+            <div class="ticket-list">
+                <!-- Search Bar -->
+                <div class="ticket-search-bar">
+                    <select id="searchProjectFilter" onchange="searchTickets()">
+                        <option value="">All projects</option>
+                    </select>
+                    <input type="text" id="searchInput" placeholder="Search...">
+                    <button class="btn-search" onclick="searchTickets()">🔍</button>
+                    <button class="btn-clear" onclick="clearSearch()">✕</button>
+                    <button class="btn-create" onclick="openCreateModal()">+</button>
+                </div>
+                <div class="ticket-sort-bar">
+                    <label for="sortSelect">Sort:</label>
+                    <select id="sortSelect" onchange="changeSorting()">
+                        <option value="updated-desc">Update (Latest)</option>
+                        <option value="updated-asc">Update (Oldest)</option>
+                        <option value="created-desc">Created (Latest)</option>
+                        <option value="created-asc">Created (Oldest)</option>
+                        <option value="id-desc">ID (Descending)</option>
+                        <option value="id-asc">ID (Ascending)</option>
+                        <option value="priority">Priority</option>
+                    </select>
+                </div>
+                <div id="ticketList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <div class="empty-state-text">No tickets found</div>
+                </div>
+                </div>
+                <div class="pagination-bar">
+                    <div class="pagination-info" id="paginationInfo">Page 1 of 1</div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" onclick="changePage('prev')" id="prevBtn">◀</button>
+                        <button class="pagination-btn" onclick="changePage('next')" id="nextBtn">▶</button>
+                    </div>
+                </div>
+                <div class="status-filter-bar">
+                    <button class="status-filter-btn" onclick="filterByStatus('Triage')">
+                        Triage <span class="count" id="triageCount">0</span>
+                    </button>
+                    <button class="status-filter-btn" onclick="filterByStatus('In Progress')">
+                        In Progress <span class="count" id="inProgressCount">0</span>
+                    </button>
+                    <button class="status-filter-btn active" onclick="filterByStatus('Triage+In Progress')">
+                        Triage+In Progress <span class="count" id="activeCount">0</span>
+                    </button>
+                    <button class="status-filter-btn" onclick="filterByStatus('Done')">
+                        Done <span class="count" id="doneCount">0</span>
+                    </button>
+                    <button class="status-filter-btn" onclick="filterByStatus('Total')">
+                        Total <span class="count" id="totalCount">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticket Detail -->
+            <div class="ticket-detail">
+                <div class="ticket-detail-empty" id="emptyDetail">
+                    Select a ticket to view details
+                </div>
+                <div id="ticketDetailContent" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Ticket Modal -->
+    <div id="ticketModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Create Ticket</h2>
+                <button class="modal-close" onclick="closeTicketModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="ticketForm">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 0 0 6ch; min-width: 140px;">
+                            <label for="ticketProject" style="display: block; text-align: left;">Project *</label>
+                            <select id="ticketProject" required style="padding: 10px;">
+                                <option value="">Select project</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="ticketSummary">Summary *</label>
+                            <input type="text" id="ticketSummary" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ticketIssueType">Issue Type *</label>
+                            <select id="ticketIssueType" required>
+                                <option value="Task">Task</option>
+                                <option value="Bug">Bug</option>
+                                <option value="Feature">Feature</option>
+                                <option value="Story">Story</option>
+                                <option value="Epic">Epic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketPriority">Priority *</label>
+                            <select id="ticketPriority" required>
+                                <option value="K1">K1</option>
+                                <option value="K2" selected>K2</option>
+                                <option value="K3">K3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketDueDate">Due Date</label>
+                            <input type="date" id="ticketDueDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="ticketAssignee">Assignee</label>
+                            <select id="ticketAssignee">
+                                <option value="">Unassigned</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Links</label>
+                        <div class="chip-row">
+                            <div id="ticketLinksChips" class="chip-container"></div>
+                            <input id="ticketLinksInput" type="text" placeholder="Paste or type URL, then Enter/Space" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ticketDescriptionEditor">Description</label>
+                        <div id="ticketDescriptionEditor" class="rich-editor is-empty" contenteditable="true" data-placeholder="Describe the ticket..."></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeTicketModal()">Cancel</button>
+                <button class="btn-success" onclick="saveTicket()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Page (Full Page) -->
+    <div id="myPageContainer" class="mypage-container-page">
+        <!-- Header -->
+        <div class="mypage-header">
+            <h1>📋 My Page</h1>
+            <div class="user-info">
+                <span id="currentUser2">User</span>
+                <button class="btn-ghost btn-small" onclick="closeMyPage()">◀ Back to Tickets</button>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- My Page Content -->
+        <div class="mypage-main">
+            <div class="mypage-container">
+                <!-- Left Sidebar Tabs -->
+                <div class="mypage-sidebar">
+                    <button class="mypage-tab active" data-tab="profile" onclick="switchTab('profile', this)">
+                        👤 Profile
+                    </button>
+                    <button class="mypage-tab" data-tab="password" onclick="switchTab('password', this)">
+                        🔒 Password
+                    </button>
+                    <button class="mypage-tab" data-tab="projects" onclick="switchTab('projects', this)">
+                        📁 Projects
+                    </button>
+                    <button class="mypage-tab" data-tab="users" onclick="switchTab('users', this)" id="usersTabBtn" style="display: none;">
+                        👥 User Management
+                    </button>
+                    <button class="mypage-tab" data-tab="database" onclick="switchTab('database', this)" id="databaseTabBtn" style="display: none;">
+                        🗄️ Database Admin
+                    </button>
+                </div>
+                
+                <!-- Right Content Area -->
+                <div class="mypage-content">
+                    <!-- Profile Tab -->
+                    <div id="profileTab" class="tab-content active">
+                        <h3 style="margin-top: 0; margin-bottom: 14px;">Profile</h3>
+                        <div style="background: #fff; border: 1px solid #e6e8ec; border-radius: 10px; padding: 16px; display: grid; gap: 12px; max-width: 620px;">
+                            <div class="form-group">
+                                <label>User ID</label>
+                                <input type="text" id="profileUsername" disabled>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1 1 50%;">
+                                    <label>Family Name</label>
+                                    <input type="text" id="profileFamilyName" placeholder="e.g., Doe" disabled>
+                                </div>
+                                <div class="form-group" style="flex: 1 1 50%;">
+                                    <label>Given Name</label>
+                                    <input type="text" id="profileGivenName" placeholder="e.g., Jane" disabled>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1 1 60%;">
+                                    <label>Email</label>
+                                    <input type="email" id="profileEmail" placeholder="e.g., user@example.com">
+                                </div>
+                                <div class="form-group" style="flex: 1 1 40%;">
+                                    <label>Mobile</label>
+                                    <input type="text" id="profileMobile" placeholder="e.g., 010-1234-5678">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <button class="btn-primary btn-small" onclick="saveProfile()">💾 Save Profile</button>
+                                <span id="profileStatus" style="font-size: 12px; color: #666;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password Tab -->
+                    <div id="passwordTab" class="tab-content">
+                        <h3 style="margin-top: 0; margin-bottom: 14px;">Password</h3>
+                        <div style="background: #fff; border: 1px solid #e6e8ec; border-radius: 10px; padding: 16px; max-width: 420px; display: grid; gap: 12px;">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" autocomplete="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword" autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmPassword" autocomplete="new-password">
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <button class="btn-success btn-small" onclick="changePassword()">🔒 Update Password</button>
+                                <span id="passwordStatus" style="font-size: 12px; color: #666;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Projects Tab -->
+                    <div id="projectsTab" class="tab-content">
+                    <button class="btn-add btn-small" id="addProjectBtn" onclick="showAddProjectForm()" style="display: none;">
+                        ➕ Add Project
+                    </button>
+                    <div id="addProjectForm" style="display: none; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                        <div class="form-group">
+                            <label>Project ID * (영문만 가능)</label>
+                            <input type="text" id="newProjectId" placeholder="e.g., PROJ1" oninput="handleProjectIdInput(event)" onkeypress="return isEnglishOnly(event)">
+                            <div class="input-hint">영문 대소문자, 숫자, 하이픈(-), 언더스코어(_)만 사용 가능</div>
+                            <div id="projectIdSuggestions" style="display: none;" class="suggestion-container">
+                                <div class="suggestion-label">💡 추천 프로젝트 ID:</div>
+                                <div id="suggestionChips" class="suggestion-chips"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="newProjectDesc" rows="3"></textarea>
+                        </div>
+                        <button class="btn-success btn-small" onclick="createProject()">✅ Create</button>
+                        <button class="btn-secondary btn-small" onclick="hideAddProjectForm()">❌ Cancel</button>
+                    </div>
+                    <table class="project-table">
+                        <thead>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Description</th>
+                                <th>Created By</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectsList">
+                        </tbody>
+                    </table>
+                        </div>
+                        
+                        <!-- Users Tab -->
+                        <div id="usersTab" class="tab-content">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersList">
+                        </tbody>
+                    </table>
+                        </div>
+
+                        <!-- Database Tab -->
+                        <div id="databaseTab" class="tab-content">
+                            <h3>Database Administration</h3>
+                            <div style="margin-bottom: 20px;">
+                                <label style="font-weight: 600; margin-right: 10px;">Select Table:</label>
+                                <select id="dbTableSelect" onchange="loadTableData()" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd; min-width: 200px;">
+                                    <option value="">-- Select a table --</option>
+                                </select>
+                                <button id="dbRefreshBtn" class="btn-primary btn-small" onclick="refreshTableList()" style="margin-left: 10px;">🔄 Refresh</button>
+                            </div>
+
+                            <div id="dbQuerySection" style="margin-bottom: 20px; display: none;">
+                                <h4>Custom SQL Query</h4>
+                                <textarea id="sqlQuery" rows="4" placeholder="SELECT * FROM table_name..." style="width: 100%; padding: 10px; font-family: monospace; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                                <button class="btn-success btn-small" onclick="executeQuery()">▶ Execute Query</button>
+                                <button class="btn-secondary btn-small" onclick="toggleQuerySection()">Hide Query</button>
+                            </div>
+                            <button class="btn-ghost btn-small" onclick="toggleQuerySection()" id="showQueryBtn" style="margin-bottom: 20px;">💻 Show SQL Query</button>
+
+                            <div id="dbTableDataSection" style="display: none;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                    <h4 id="currentTableName" style="margin: 0;">Table Data</h4>
+                                    <button class="btn-add btn-small" onclick="showAddRecordModal()">➕ Add Record</button>
+                                </div>
+                                <div style="overflow-x: auto;">
+                                    <table class="user-table" id="dbDataTable">
+                                        <thead id="dbTableHead"></thead>
+                                        <tbody id="dbTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div id="dbQueryResult" style="margin-top: 20px; display: none;">
+                                <h4>Query Result</h4>
+                                <div style="overflow-x: auto;">
+                                    <pre id="queryResultText" style="background: #f5f5f5; padding: 15px; border-radius: 4px; max-height: 400px; overflow: auto;"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let sessionId = null;
+        let currentUser = null;
+        let currentUserRole = 0;
+        let tickets = [];
+        let allTickets = []; // Store all tickets for filtering
+        let currentStatusFilter = 'Triage+In Progress'; // Default filter
+        let currentSort = 'updated-desc'; // Default: Update (Latest)
+        let currentPage = 1;
+        let itemsPerPage = 12;
+        let selectedTicketId = null;
+        let selectedProjectId = null;
+        let users = [];
+        let allUsers = [];
+        let newTicketLinks = [];
+        let projects = [];
+        let profileData = null;
+
+        // API Base URL
+        const API_BASE = '';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded fired');
+            checkSession();
+            
+            // Login form
+            const loginForm = document.getElementById('loginForm');
+            console.log('Login form element:', loginForm);
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    console.log('Form submit event fired');
+                    e.preventDefault();
+                    login();
+                });
+                console.log('Login form submit listener added');
+            } else {
+                console.error('Login form not found!');
+            }
+
+            // Search on Enter key
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchTickets();
+                }
+            });
+        });
+
+        // Check if user is already logged in
+        function checkSession() {
+            const savedSession = localStorage.getItem('sessionId');
+            const savedUser = localStorage.getItem('username');
+            const savedRole = localStorage.getItem('userRole');
+            
+            if (savedSession && savedUser) {
+                sessionId = savedSession;
+                currentUser = savedUser;
+                currentUserRole = parseInt(savedRole) || 0;
+                showApp();
+            }
+        }
+
+        // Login
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            console.log('Login attempt:', username);
+            console.log('API_BASE:', API_BASE);
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                console.log('Login response status:', response.status);
+                const data = await response.json();
+                console.log('Login response data:', data);
+
+                if (response.ok) {
+                    sessionId = data.session_id;
+                    currentUser = data.username;
+                    currentUserRole = data.role || 0;
+                    
+                    localStorage.setItem('sessionId', sessionId);
+                    localStorage.setItem('username', currentUser);
+                    localStorage.setItem('userRole', currentUserRole);
+                    
+                    console.log('Login successful, calling showApp()');
+                    showApp();
+                } else {
+                    console.error('Login failed:', data.error);
+                    errorDiv.textContent = data.error || 'Login failed';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Connection error: ' + error.message;
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                await fetch(`${API_BASE}/api/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            
+            sessionId = null;
+            currentUser = null;
+            currentUserRole = 0;
+            localStorage.removeItem('sessionId');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userRole');
+            
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('appContainer').classList.remove('active');
+            document.getElementById('myPageContainer').classList.remove('active');
+        }
+
+        // Show app after login
+        function showApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appContainer').classList.add('active');
+            document.getElementById('myPageContainer').classList.remove('active');
+            document.getElementById('currentUser').textContent = currentUser;
+            
+            loadUsers();
+            loadProjects();
+            loadTickets();
+        }
+
+        // Link helpers
+        function normalizeLink(url) {
+            return (url || '').trim();
+        }
+
+        function renderChipList(container, links, onRemove) {
+            if (!container) return;
+            container.innerHTML = '';
+            links.forEach((link, idx) => {
+                const chip = document.createElement('span');
+                chip.className = 'chip';
+                const span = document.createElement('span');
+                span.textContent = link;
+                chip.appendChild(span);
+                const btn = document.createElement('button');
+                btn.className = 'chip-remove';
+                btn.type = 'button';
+                btn.textContent = '×';
+                btn.onclick = () => onRemove(idx);
+                chip.appendChild(btn);
+                container.appendChild(chip);
+            });
+        }
+
+        function addNewTicketLinkFromInput() {
+            const input = document.getElementById('ticketLinksInput');
+            if (!input) return;
+            const value = normalizeLink(input.value);
+            if (!value) return;
+            if (!newTicketLinks.includes(value)) {
+                newTicketLinks.push(value);
+                const rerender = () => renderChipList(document.getElementById('ticketLinksChips'), newTicketLinks, removeHandler);
+                const removeHandler = (idx) => {
+                    newTicketLinks.splice(idx, 1);
+                    rerender();
+                };
+                rerender();
+            }
+            input.value = '';
+        }
+
+        function setupTicketLinks(ticket) {
+            const links = Array.isArray(ticket.links) ? [...ticket.links] : [];
+            const containerId = `ticketLinksChips-${ticket.id}`;
+            const inputId = `ticketLinkInput-${ticket.id}`;
+            const container = document.getElementById(containerId);
+            const input = document.getElementById(inputId);
+
+            const rerender = () => renderChipList(container, links, removeHandler);
+            const removeHandler = (idx) => {
+                links.splice(idx, 1);
+                updateTicketLinks(ticket.project_id, ticket.id, links, rerender);
+            };
+
+            rerender();
+
+            if (input) {
+                input.value = '';
+                input.ondblclick = () => {
+                    addLinkToTicket(ticket.project_id, ticket.id);
+                };
+                input.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        addLinkToTicket(ticket.project_id, ticket.id);
+                        return;
+                    }
+                    if ((e.key === 'Backspace' || e.key === 'Delete') && input.value.trim() === '' && links.length > 0) {
+                        e.preventDefault();
+                        const last = links.pop();
+                        updateTicketLinks(ticket.project_id, ticket.id, links, rerender);
+                        input.value = last;
+                    }
+                };
+            }
+        }
+
+        async function addLinkToTicket(projectId, ticketId) {
+            const input = document.getElementById(`ticketLinkInput-${ticketId}`);
+            if (!input) return;
+            const raw = normalizeLink(input.value);
+            if (!raw) return;
+
+            const container = document.getElementById(`ticketLinksChips-${ticketId}`);
+            const chips = container ? Array.from(container.querySelectorAll('.chip a, .chip span')).map(el => el.textContent) : [];
+            const links = [...chips];
+            if (!links.includes(raw)) {
+                links.push(raw);
+                await updateTicketLinks(projectId, ticketId, links);
+            }
+            input.value = '';
+        }
+
+        async function updateTicketLinks(projectId, ticketId, links, onSuccess) {
+            try {
+                const response = await fetch(`${API_BASE}/api/projects/${projectId}/tickets/${ticketId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({ links })
+                });
+                if (response.ok) {
+                    if (onSuccess) onSuccess();
+                    await loadTickets();
+                    await selectTicket(projectId, ticketId, false);
+                } else {
+                    const data = await response.json();
+                    alert('Failed to update links: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error updating links: ' + error.message);
+            }
+        }
+
+        // Load users for assignee dropdown
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE}/api/users`, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    users = data.users;
+                    
+                    const assigneeSelect = document.getElementById('ticketAssignee');
+                    assigneeSelect.innerHTML = '<option value="">Unassigned</option>';
+                    users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.username;
+                        option.textContent = user.username;
+                        assigneeSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Load tickets
+        async function loadTickets(search = null, projectId = null) {
+            try {
+                const effectiveSearch = search !== null ? search : (document.getElementById('searchInput')?.value || '');
+                const effectiveProject = projectId !== null ? projectId : (document.getElementById('searchProjectFilter')?.value || '');
+
+                const params = new URLSearchParams();
+                if (effectiveSearch) params.append('search', effectiveSearch);
+                if (effectiveProject) params.append('project_id', effectiveProject);
+                const queryString = params.toString();
+                const url = queryString ? `${API_BASE}/api/tickets?${queryString}` : `${API_BASE}/api/tickets`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    allTickets = data.tickets;
+                    console.log('Loaded tickets:', allTickets.map(t => ({id: t.id, project_id: t.project_id})));
+                    updateStatusCounts();
+                    applyStatusFilter();
+                } else if (response.status === 401) {
+                    logout();
+                }
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+            }
+        }
+
+        // Render ticket list
+        function renderTicketList() {
+            const listContainer = document.getElementById('ticketList');
+            
+            updateStatusCounts();
+            
+            if (tickets.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-text">No tickets found</div>
+                    </div>
+                `;
+                updatePaginationUI();
+                return;
+            }
+            
+            // Apply sorting
+            applySorting();
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(tickets.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedTickets = tickets.slice(startIndex, endIndex);
+            
+            listContainer.innerHTML = paginatedTickets.map(ticket => {
+                const matchedFieldsHtml = ticket.matchedFields && ticket.matchedFields.length > 0
+                    ? `<div class="matched-fields">Matched: ${ticket.matchedFields.join(', ')}</div>`
+                    : '';
+                const issueClass = `issue-${(ticket.issue_type || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'default'}`;
+                return `
+                <div class="ticket-item ${ticket.id === selectedTicketId && ticket.project_id === selectedProjectId ? 'active' : ''}" 
+                     onclick="selectTicket('${ticket.project_id}', ${ticket.id})">
+                    <div class="ticket-item-first-line">
+                        <div class="ticket-item-left">
+                            <span class="ticket-context">${formatProjectLabel(ticket)}-${padTicketId(ticket.project_sequence || ticket.id)}</span>
+                            <span class="ticket-status status-${ticket.status.toLowerCase().replace(' ', '')}">${ticket.status}</span>
+                        </div>
+                        <div class="ticket-item-right">
+                            <span class="issue-type-badge ${issueClass}">${ticket.issue_type}</span>
+                            <span class="priority-badge priority-${ticket.priority || 'K2'}">${ticket.priority || 'K2'}</span>
+                        </div>
+                    </div>
+                    <div class="ticket-summary">${escapeHtml(ticket.summary)}</div>
+                    ${matchedFieldsHtml}
+                </div>
+            `;
+            }).join('');
+            
+            updatePaginationUI();
+        }
+
+        // Update pagination UI
+        function updatePaginationUI() {
+            const totalPages = Math.ceil(tickets.length / itemsPerPage);
+            const startItem = tickets.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, tickets.length);
+            
+            document.getElementById('paginationInfo').textContent = 
+                `${startItem}-${endItem} of ${tickets.length}`;
+            
+            document.getElementById('prevBtn').disabled = currentPage <= 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        // Change page
+        function changePage(direction) {
+            const totalPages = Math.ceil(tickets.length / itemsPerPage);
+            
+            if (direction === 'prev' && currentPage > 1) {
+                currentPage--;
+            } else if (direction === 'next' && currentPage < totalPages) {
+                currentPage++;
+            }
+            
+            renderTicketList();
+        }
+
+        // Change sorting
+        function changeSorting() {
+            const sortSelect = document.getElementById('sortSelect');
+            currentSort = sortSelect.value;
+            currentPage = 1; // Reset to first page
+            applySorting();
+            renderTicketList();
+        }
+
+        // Apply sorting to tickets
+        function applySorting() {
+            const priorityOrder = { 'K1': 1, 'K2': 2, 'K3': 3, 'K4': 4 };
+            
+            tickets.sort((a, b) => {
+                switch (currentSort) {
+                    case 'updated-desc':
+                        return new Date(b.updated_at || 0) - new Date(a.updated_at || 0);
+                    case 'updated-asc':
+                        return new Date(a.updated_at || 0) - new Date(b.updated_at || 0);
+                    case 'created-desc':
+                        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+                    case 'created-asc':
+                        return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+                    case 'id-desc':
+                        return (b.id || 0) - (a.id || 0);
+                    case 'id-asc':
+                        return (a.id || 0) - (b.id || 0);
+                    case 'priority':
+                        const priorityA = priorityOrder[a.priority] || 99;
+                        const priorityB = priorityOrder[b.priority] || 99;
+                        return priorityA - priorityB;
+                    default:
+                        return 0;
+                }
+            });
+        }
+
+        // Select ticket
+        async function selectTicket(projectId, ticketId, shouldScroll = true) {
+            selectedProjectId = projectId;
+            selectedTicketId = ticketId;
+            renderTicketList();
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/projects/${projectId}/tickets/${ticketId}`, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    renderTicketDetail(data.ticket, shouldScroll);
+                }
+            } catch (error) {
+                console.error('Error loading ticket detail:', error);
+            }
+        }
+
+        // Render ticket detail
+        function renderTicketDetail(ticket, shouldScroll = true) {
+            document.getElementById('emptyDetail').style.display = 'none';
+            const detailContent = document.getElementById('ticketDetailContent');
+            detailContent.style.display = 'block';
+            if (shouldScroll) {
+                detailContent.scrollTop = 0;
+                const detailPane = document.querySelector('.ticket-detail');
+                if (detailPane) detailPane.scrollTop = 0;
+            }
+            const descriptionRaw = (ticket.description || '').replace(/\r\n?/g, '\n');
+            const descriptionDisplay = descriptionRaw ? renderRichText(descriptionRaw) : 'No description provided';
+            const encodedDescription = encodeContent(descriptionRaw);
+            
+            detailContent.innerHTML = `
+                <div class="ticket-detail-content">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <div class="detail-title-main">
+                                <span class="ticket-context">[${formatProjectLabel(ticket)}-${padTicketId(ticket.project_sequence || ticket.id)}]</span>
+                                <h2 class="editable" data-field="summary" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" ondblclick="makeEditable(this, 'input')">${escapeHtml(ticket.summary)}</h2>
+                            </div>
+                            <div class="ticket-meta-row">
+                                <span class="ticket-meta">Created ${formatDateTime(ticket.created_at)}</span>
+                                <span class="ticket-meta-sep">•</span>
+                                <span class="ticket-meta">Updated ${formatDateTime(ticket.updated_at)}</span>
+                            </div>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="detail-menu-button" type="button" onclick="toggleDetailMenu(event)">More</button>
+                            <div class="detail-menu-dropdown">
+                                <button class="detail-menu-item" type="button" onclick="handleDetailDelete(event, ${ticket.id})">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-info">
+                        <div class="info-item">
+                            <div class="info-label">Issue Type</div>
+                            <div class="info-value editable" data-field="issue_type" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" ondblclick="makeEditable(this, 'select')">${ticket.issue_type}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Priority</div>
+                            <div class="info-value editable" data-field="priority" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" ondblclick="makeEditable(this, 'select')">${ticket.priority || 'K2'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value editable" data-field="status" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" ondblclick="makeEditable(this, 'select')">${ticket.status}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Assignee</div>
+                            <div class="info-value editable" data-field="assignee" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" ondblclick="makeEditable(this, 'select')">${ticket.assignee || 'Unassigned'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Due Date</div>
+                            <div class="info-value editable" data-field="due_date" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" ondblclick="makeEditable(this, 'date')">${ticket.due_date ? formatDate(ticket.due_date) : 'Not set'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Creator</div>
+                            <div class="info-value">${ticket.creator}</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="section-title">Links</div>
+                        <div class="chip-row">
+                            <div id="ticketLinksChips-${ticket.id}" class="chip-container"></div>
+                            <input id="ticketLinkInput-${ticket.id}" type="text" placeholder="Paste or type URL, then Enter/Space">
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="section-title">Description</div>
+                        <div class="description-content editable" data-field="description" data-project-id="${ticket.project_id}" data-ticket-id="${ticket.id}" data-raw-value="${encodedDescription}" ondblclick="makeEditable(this, 'textarea')">${descriptionDisplay}</div>
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="section-title">Attachments</div>
+                        ${renderAttachments(ticket.attachments)}
+                    </div>
+
+                    <div class="detail-section">
+                        <div class="section-title">Comments</div>
+                        ${renderComments(ticket.comments)}
+                    </div>
+                </div>
+            `;
+            initializeCommentEditor();
+            setupTicketLinks(ticket);
+        }
+
+        // Render attachments
+        function renderAttachments(attachments) {
+            const attachmentList = attachments.length > 0 ? `
+                <div class="attachment-list">
+                    ${attachments.map(att => {
+                        const safeDisplay = escapeHtml(att.filename);
+                        const safeJs = att.filename.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                        const sizeText = formatFileSize(att.size);
+                        const uploaded = formatDateTime(att.uploaded_at);
+                        return `
+                        <div class="attachment-item" onclick="downloadAttachment(${selectedTicketId}, '${safeJs}')">
+                            <div class="attachment-main">
+                                <span class="attachment-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" focusable="false">
+                                        <path d="M8 7v9a4 4 0 0 0 8 0V6a3 3 0 0 0-6 0v9a1 1 0 0 0 2 0V7" />
+                                    </svg>
+                                </span>
+                                <div class="attachment-info">
+                                    <div class="attachment-name-row">
+                                        <div class="attachment-name-group">
+                                            <span class="attachment-name">${safeDisplay}</span>
+                                            <span class="attachment-size">${sizeText}</span>
+                                        </div>
+                                        <span class="attachment-date">${uploaded}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="attachment-delete" onclick="deleteAttachment(event, ${selectedTicketId}, '${safeJs}')" aria-label="Delete attachment" title="Delete attachment">&times;</button>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            ` : '<div class="empty-state"><div class="empty-state-text">No attachments</div></div>';
+
+            return `
+                <div class="attachment-dropzone" onclick="openAttachmentPicker()" ondragover="handleAttachmentDragOver(event)" ondragleave="handleAttachmentDragLeave(event)" ondrop="handleAttachmentDrop(event)">
+                    <input type="file" id="attachmentFile" onchange="handleAttachmentInput(this.files)">
+                    <div>Drag & drop files here, or click to browse</div>
+                </div>
+                ${attachmentList}
+            `;
+        }
+
+        // Render comments
+        function renderComments(comments) {
+            const commentList = comments.length > 0 ? `
+                <div class="comment-list">
+                    ${comments.map(comment => {
+                        const isOwner = comment.author === currentUser;
+                        const rawContent = (comment.content || '').replace(/\r\n?/g, '\n');
+                        const encodedContent = encodeContent(rawContent);
+                        const renderedContent = rawContent ? renderRichText(rawContent) : '';
+                        return `
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <span class="comment-author">${comment.author}</span>
+                                <div class="comment-meta">
+                                    <span class="comment-date">${formatDateTime(comment.created_at)}</span>
+                                    ${isOwner ? `
+                                        <button class="comment-icon-btn" onclick="startCommentEdit(${comment.id})" aria-label="Edit comment">✎</button>
+                                        <button class="comment-icon-btn" onclick="deleteComment(${comment.id})" aria-label="Delete comment">🗑</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            <div class="comment-content" id="comment-content-${comment.id}" data-raw="${encodedContent}">${renderedContent}</div>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            ` : '<div class="empty-state"><div class="empty-state-text">No comments yet</div></div>';
+
+            return commentList + `
+                <div class="comment-form">
+                    <div id="commentEditor" class="rich-editor is-empty" contenteditable="true" data-placeholder="Add a comment..."></div>
+                    <button onclick="addComment()">Post</button>
+                </div>
+            `;
+        }
+
+        // Search tickets
+        function searchTickets() {
+            const searchInput = document.getElementById('searchInput').value.trim();
+            const projectId = document.getElementById('searchProjectFilter').value;
+            
+            // Reset page
+            currentPage = 1;
+            
+            // Clear selected ticket
+            selectedTicketId = null;
+            document.getElementById('emptyDetail').style.display = 'flex';
+            document.getElementById('ticketDetailContent').style.display = 'none';
+            
+            if (!searchInput && !projectId) {
+                loadTickets('', '');
+                return;
+            }
+            
+            // Load all tickets first, apply status filter, then keyword filter
+            loadTickets('', projectId).then(() => {
+                if (searchInput) {
+                    filterTicketsByKeyword(searchInput);
+                }
+            });
+        }
+
+        // Helper function to strip image tokens from text
+        function stripImageTokens(text) {
+            if (!text) return '';
+            return text.replace(/\[\[img:[^\]]+\]\]/g, '');
+        }
+
+        // Filter tickets by keyword using regex across all fields
+        function filterTicketsByKeyword(keyword) {
+            if (!keyword) {
+                applyStatusFilter();
+                return;
+            }
+            
+            try {
+                // Create case-insensitive regex
+                const regex = new RegExp(keyword, 'i');
+                
+                // Filter tickets from current status-filtered list and track matched fields
+                tickets = tickets.filter(ticket => {
+                    const matchedFieldsSet = new Set();
+                    
+                    // Collect comment contents
+                    const commentContents = (ticket.comments || []).map(c => stripImageTokens(c.content || '')).join(' ');
+                    
+                    const fields = [
+                        { name: 'ID', value: String(ticket.id || '') },
+                        { name: 'Summary', value: ticket.summary || '' },
+                        { name: 'Description', value: stripImageTokens(ticket.description || '') },
+                        { name: 'Type', value: ticket.issue_type || '' },
+                        { name: 'Priority', value: ticket.priority || '' },
+                        { name: 'Status', value: ticket.status || '' },
+                        { name: 'Assignee', value: ticket.assignee || '' },
+                        { name: 'Creator', value: ticket.creator || '' },
+                        { name: 'Project', value: ticket.project_id || '' },
+                        { name: 'Comments', value: commentContents }
+                    ];
+                    
+                    // Check all fields and collect unique matched field names
+                    fields.forEach(field => {
+                        if (field.value && regex.test(field.value)) {
+                            matchedFieldsSet.add(field.name);
+                        }
+                    });
+                    
+                    if (matchedFieldsSet.size > 0) {
+                        ticket.matchedFields = Array.from(matchedFieldsSet);
+                        return true;
+                    }
+                    return false;
+                });
+                
+                renderTicketList();
+            } catch (error) {
+                console.error('Invalid regex pattern:', error);
+                // If regex is invalid, use simple substring search
+                const lowerKeyword = keyword.toLowerCase();
+                tickets = tickets.filter(ticket => {
+                    const matchedFieldsSet = new Set();
+                    
+                    // Collect comment contents
+                    const commentContents = (ticket.comments || []).map(c => stripImageTokens(c.content || '')).join(' ');
+                    
+                    const fields = [
+                        { name: 'ID', value: String(ticket.id || '') },
+                        { name: 'Summary', value: ticket.summary || '' },
+                        { name: 'Description', value: stripImageTokens(ticket.description || '') },
+                        { name: 'Type', value: ticket.issue_type || '' },
+                        { name: 'Priority', value: ticket.priority || '' },
+                        { name: 'Status', value: ticket.status || '' },
+                        { name: 'Assignee', value: ticket.assignee || '' },
+                        { name: 'Creator', value: ticket.creator || '' },
+                        { name: 'Project', value: ticket.project_id || '' },
+                        { name: 'Comments', value: commentContents }
+                    ];
+                    
+                    // Check all fields and collect unique matched field names
+                    fields.forEach(field => {
+                        if (field.value && field.value.toLowerCase().includes(lowerKeyword)) {
+                            matchedFieldsSet.add(field.name);
+                        }
+                    });
+                    
+                    if (matchedFieldsSet.size > 0) {
+                        ticket.matchedFields = Array.from(matchedFieldsSet);
+                        return true;
+                    }
+                    return false;
+                });
+                
+                renderTicketList();
+            }
+        }
+
+        // Clear search
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            const filter = document.getElementById('searchProjectFilter');
+            const projectId = filter ? filter.value : '';
+            
+            // Reset page
+            currentPage = 1;
+            
+            // Clear selected ticket
+            selectedTicketId = null;
+            document.getElementById('emptyDetail').style.display = 'flex';
+            document.getElementById('ticketDetailContent').style.display = 'none';
+            
+            // Reload tickets for selected project or all
+            loadTickets('', projectId);
+        }
+
+        // Update status counts
+        function updateStatusCounts() {
+            const triageTickets = allTickets.filter(t => t.status === 'Triage');
+            const inProgressTickets = allTickets.filter(t => t.status === 'In Progress');
+            const doneTickets = allTickets.filter(t => t.status === 'Done');
+            const activeTickets = allTickets.filter(t => t.status === 'Triage' || t.status === 'In Progress');
+            
+            document.getElementById('triageCount').textContent = triageTickets.length;
+            document.getElementById('inProgressCount').textContent = inProgressTickets.length;
+            document.getElementById('activeCount').textContent = activeTickets.length;
+            document.getElementById('doneCount').textContent = doneTickets.length;
+            document.getElementById('totalCount').textContent = allTickets.length;
+        }
+
+        // Filter tickets by status
+        function filterByStatus(status) {
+            currentStatusFilter = status;
+            
+            // Update active button style
+            document.querySelectorAll('.status-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.status-filter-btn').classList.add('active');
+            
+            // Clear selected ticket
+            selectedTicketId = null;
+            document.getElementById('emptyDetail').style.display = 'flex';
+            document.getElementById('ticketDetailContent').style.display = 'none';
+            
+            applyStatusFilter();
+        }
+
+        // Apply current status filter
+        function applyStatusFilter() {
+            currentPage = 1; // Reset to first page
+            
+            if (currentStatusFilter === 'Total') {
+                tickets = [...allTickets];
+            } else if (currentStatusFilter === 'Triage+In Progress') {
+                tickets = allTickets.filter(t => t.status === 'Triage' || t.status === 'In Progress');
+            } else {
+                tickets = allTickets.filter(t => t.status === currentStatusFilter);
+            }
+            
+            renderTicketList();
+        }
+
+        // Open create modal
+        function openCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Create Ticket';
+            document.getElementById('ticketForm').reset();
+                initializeTicketDescriptionEditor();
+            populateProjectSelect();
+            newTicketLinks = [];
+            const chipContainer = document.getElementById('ticketLinksChips');
+            const rerenderLinks = () => renderChipList(chipContainer, newTicketLinks, removeHandler);
+            const removeHandler = (idx) => {
+                newTicketLinks.splice(idx, 1);
+                rerenderLinks();
+            };
+            rerenderLinks();
+            const linkInput = document.getElementById('ticketLinksInput');
+            if (linkInput) {
+                linkInput.value = '';
+                linkInput.ondblclick = () => {
+                    addNewTicketLinkFromInput();
+                };
+                linkInput.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        addNewTicketLinkFromInput();
+                        return;
+                    }
+                    if ((e.key === 'Backspace' || e.key === 'Delete') && linkInput.value.trim() === '' && newTicketLinks.length > 0) {
+                        e.preventDefault();
+                        const last = newTicketLinks.pop();
+                        rerenderLinks();
+                        linkInput.value = last;
+                    }
+                };
+            }
+            const projectSelect = document.getElementById('ticketProject');
+            const currentTicket = tickets.find(t => t.id === selectedTicketId);
+            const preferredProject = currentTicket?.project_id || (projects[0] ? projects[0].id : '');
+            if (preferredProject) {
+                const exists = Array.from(projectSelect.options).some(opt => opt.value === preferredProject);
+                if (!exists) {
+                    const opt = document.createElement('option');
+                    opt.value = preferredProject;
+                    opt.textContent = preferredProject;
+                    projectSelect.appendChild(opt);
+                }
+                projectSelect.value = preferredProject;
+            }
+            document.getElementById('ticketModal').classList.add('active');
+        }
+
+        // Close ticket modal
+        function closeTicketModal() {
+            document.getElementById('ticketModal').classList.remove('active');
+        }
+
+        // Save ticket
+        async function saveTicket() {
+            const summary = document.getElementById('ticketSummary').value;
+            const issueType = document.getElementById('ticketIssueType').value;
+            const priority = document.getElementById('ticketPriority').value;
+            const dueDate = document.getElementById('ticketDueDate').value;
+            const assignee = document.getElementById('ticketAssignee').value;
+            const descriptionEditor = document.getElementById('ticketDescriptionEditor');
+            const description = descriptionEditor ? getEditorContent(descriptionEditor).replace(/\r/g, '') : '';
+            const projectId = document.getElementById('ticketProject').value;
+            const links = [...newTicketLinks];
+
+            if (!summary) {
+                alert('Summary is required');
+                return;
+            }
+
+            if (!projectId) {
+                alert('Project is required');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({
+                        summary,
+                        issue_type: issueType,
+                        priority: priority,
+                        due_date: dueDate || null,
+                        assignee: assignee || null,
+                        description,
+                        project_id: projectId,
+                        links
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const newTicket = data.ticket;
+                    
+                    closeTicketModal();
+                    
+                    // Set project filter to the newly created ticket's project
+                    const projectFilter = document.getElementById('searchProjectFilter');
+                    if (projectFilter) {
+                        projectFilter.value = projectId;
+                    }
+                    
+                    await loadTickets();
+                    
+                    // Select the newly created ticket
+                    if (newTicket && newTicket.id) {
+                        selectTicket(projectId, newTicket.id);
+                    }
+                } else {
+                    const data = await response.json();
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error creating ticket: ' + error.message);
+            }
+        }
+
+        // Edit ticket
+        async function editTicket(ticketId) {
+            // For simplicity, just allow status changeTriage
+            const newStatus = prompt('Enter new status (Open/In Progress/Done):');
+            if (!newStatus) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets/${ticketId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                });
+
+                if (response.ok) {
+                    loadTickets();
+                    if (selectedProjectId) {
+                        selectTicket(selectedProjectId, ticketId, false);
+                    }
+                }
+            } catch (error) {
+                alert('Error updating ticket: ' + error.message);
+            }
+        }
+
+        // Delete ticket
+        async function deleteTicket(ticketId) {
+            if (!confirm('Are you sure you want to delete this ticket?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tickets/${ticketId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    selectedTicketId = null;
+                    document.getElementById('emptyDetail').style.display = 'flex';
+                    document.getElementById('ticketDetailContent').style.display = 'none';
+                    loadTickets();
+                }
+            } catch (error) {
+                alert('Error deleting ticket: ' + error.message);
+            }
+        }
+
+        // Add comment
+        async function addComment() {
+            const editor = document.getElementById('commentEditor');
+            if (!editor) return;
+            const rawContent = getEditorContent(editor);
+            if (!editorHasContent(rawContent)) return;
+            const content = rawContent.replace(/\r/g, '');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/projects/${selectedProjectId}/tickets/${selectedTicketId}/comments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({ content })
+                });
+
+                if (response.ok) {
+                    setEditorContent(editor, '');
+                    // Reload tickets to update the list with new updated_at time
+                    await loadTickets();
+                    // Then select the ticket to show the new comment
+                    selectTicket(selectedProjectId, selectedTicketId, false);
+                }
+            } catch (error) {
+                alert('Error adding comment: ' + error.message);
+            }
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Delete this comment?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/comments/${commentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    await loadTickets();
+                    if (selectedProjectId) {
+                        selectTicket(selectedProjectId, selectedTicketId, false);
+                    }
+                } else {
+                    const data = await response.json();
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error deleting comment: ' + error.message);
+            }
+        }
+
+        function startCommentEdit(commentId) {
+            const contentEl = document.getElementById(`comment-content-${commentId}`);
+            if (!contentEl || contentEl.dataset.editing === 'true') return;
+
+            const original = decodeContent(contentEl.dataset.raw) || '';
+            contentEl.dataset.original = original;
+            contentEl.dataset.editing = 'true';
+
+            contentEl.innerHTML = `
+                <div id="comment-edit-${commentId}" class="rich-editor comment-edit-area" contenteditable="true" data-placeholder="Edit comment..."></div>
+                <div class="comment-edit-actions">
+                    <button class="table-action-btn btn-success" onclick="saveCommentEdit(${commentId})">Save</button>
+                    <button class="table-action-btn" onclick="cancelCommentEdit(${commentId})">Cancel</button>
+                </div>
+            `;
+
+            const editor = document.getElementById(`comment-edit-${commentId}`);
+            if (editor) {
+                setEditorContent(editor, original);
+                setupRichEditor(editor);
+                focusEditorEnd(editor);
+            }
+        }
+
+        async function saveCommentEdit(commentId) {
+            const contentEl = document.getElementById(`comment-content-${commentId}`);
+            const editor = document.getElementById(`comment-edit-${commentId}`);
+            if (!contentEl || !editor) return;
+
+            const rawContent = getEditorContent(editor);
+            if (!editorHasContent(rawContent)) {
+                alert('Comment cannot be empty');
+                return;
+            }
+            const newContent = rawContent.replace(/\r/g, '');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/comments/${commentId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({ content: newContent })
+                });
+
+                if (response.ok) {
+                    await loadTickets();
+                    if (selectedProjectId) {
+                        selectTicket(selectedProjectId, selectedTicketId, false);
+                    }
+                } else {
+                    const data = await response.json();
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error updating comment: ' + error.message);
+            }
+        }
+
+        function cancelCommentEdit(commentId) {
+            const contentEl = document.getElementById(`comment-content-${commentId}`);
+            if (!contentEl) return;
+            const original = contentEl.dataset.original || decodeContent(contentEl.dataset.raw) || '';
+            contentEl.dataset.editing = 'false';
+            contentEl.dataset.raw = encodeContent(original);
+            contentEl.innerHTML = original ? renderRichText(original) : '';
+        }
+
+        function openAttachmentPicker() {
+            const input = document.getElementById('attachmentFile');
+            if (input) input.click();
+        }
+
+        function handleAttachmentInput(files) {
+            if (!files || !files.length) return;
+            uploadAttachmentFile(files[0]);
+            // reset so same file can be selected again
+            const input = document.getElementById('attachmentFile');
+            if (input) input.value = '';
+        }
+
+        function handleAttachmentDragOver(event) {
+            event.preventDefault();
+            const zone = event.currentTarget;
+            zone.classList.add('drag-over');
+        }
+
+        function handleAttachmentDragLeave(event) {
+            const zone = event.currentTarget;
+            zone.classList.remove('drag-over');
+        }
+
+        function handleAttachmentDrop(event) {
+            event.preventDefault();
+            const zone = event.currentTarget;
+            zone.classList.remove('drag-over');
+            const files = event.dataTransfer?.files;
+            if (files && files.length > 0) {
+                uploadAttachmentFile(files[0]);
+            }
+        }
+
+        async function uploadAttachmentFile(file) {
+            if (!file) {
+                alert('Please select a file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Data = e.target.result.split(',')[1];
+
+                try {
+                    const response = await fetch(`${API_BASE}/api/tickets/${selectedTicketId}/attachments`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Session-Id': sessionId
+                        },
+                        body: JSON.stringify({
+                            filename: file.name,
+                            data: base64Data
+                        })
+                    });
+
+                    if (response.ok) {
+                        await loadTickets();
+                        if (selectedProjectId) {
+                            await selectTicket(selectedProjectId, selectedTicketId, false);
+                        }
+                    } else {
+                        const data = await response.json();
+                        alert('Error: ' + data.error);
+                    }
+                } catch (error) {
+                    alert('Error uploading file: ' + error.message);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Download attachment
+        async function downloadAttachment(ticketId, filename) {
+            try {
+                const response = await fetch(`${API_BASE}/api/attachments/${ticketId}/${encodeURIComponent(filename)}`, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
+            } catch (error) {
+                alert('Error downloading file: ' + error.message);
+            }
+        }
+
+        async function deleteAttachment(event, ticketId, filename) {
+            event.stopPropagation();
+            const confirmed = confirm('Delete this attachment?');
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/attachments/${ticketId}/${encodeURIComponent(filename)}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    await loadTickets();
+                    if (selectedProjectId) {
+                        await selectTicket(selectedProjectId, ticketId, false);
+                    }
+                } else {
+                    const data = await response.json();
+                    alert('Error: ' + (data.error || 'Failed to delete attachment'));
+                }
+            } catch (error) {
+                alert('Error deleting file: ' + error.message);
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function encodeContent(value) {
+            return encodeURIComponent(value || '');
+        }
+
+        function decodeContent(value) {
+            if (!value) return '';
+            try {
+                return decodeURIComponent(value);
+            } catch (error) {
+                console.warn('Unable to decode content value', error);
+                return value;
+            }
+        }
+
+        function renderRichText(text) {
+            if (!text) return '';
+            let result = '';
+            let lastIndex = 0;
+            const regex = /\[\[img:(data:image\/[a-zA-Z0-9+/=;,:.-]+)\]\]/g;
+            let match;
+
+            while ((match = regex.exec(text)) !== null) {
+                const chunk = text.slice(lastIndex, match.index);
+                if (chunk) {
+                    result += escapeHtml(chunk).replace(/\n/g, '<br>');
+                }
+
+                const dataUrl = match[1];
+                if (dataUrl.startsWith('data:image/')) {
+                    result += `<div class="rich-text-image"><img src="${dataUrl}" alt="Inlined visual"></div>`;
+                } else {
+                    result += escapeHtml(match[0]);
+                }
+
+                lastIndex = regex.lastIndex;
+            }
+
+            const remaining = text.slice(lastIndex);
+            if (remaining) {
+                result += escapeHtml(remaining).replace(/\n/g, '<br>');
+            }
+
+            return result || escapeHtml(text).replace(/\n/g, '<br>');
+        }
+
+        function editorHasContent(value) {
+            if (!value) return false;
+            const imagePattern = /\[\[img:[^\]]+\]\]/g;
+            const images = value.match(imagePattern);
+            if (images && images.length > 0) return true;
+            const stripped = value.replace(imagePattern, '').replace(/\s+/g, '');
+            return stripped.length > 0;
+        }
+
+        function createInlineImageElement(dataUrl) {
+            const span = document.createElement('span');
+            span.className = 'inline-image';
+            span.contentEditable = 'false';
+            span.dataset.img = encodeContent(dataUrl);
+            const img = document.createElement('img');
+            img.src = dataUrl;
+            img.alt = 'Inline image';
+            span.appendChild(img);
+            return span;
+        }
+
+        function appendTextChunk(editor, text) {
+            const parts = text.split('\n');
+            parts.forEach((part, index) => {
+                if (part) {
+                    editor.appendChild(document.createTextNode(part));
+                }
+                if (index < parts.length - 1) {
+                    editor.appendChild(document.createElement('br'));
+                }
+            });
+        }
+
+        function setEditorContent(editor, text) {
+            if (!editor) return;
+            editor.innerHTML = '';
+            if (!text) {
+                updateEditorEmptyState(editor);
+                return;
+            }
+
+            let lastIndex = 0;
+            const regex = /\[\[img:(data:image\/[a-zA-Z0-9+/=;,:.-]+)\]\]/g;
+            let match;
+
+            while ((match = regex.exec(text)) !== null) {
+                const chunk = text.slice(lastIndex, match.index);
+                if (chunk) {
+                    appendTextChunk(editor, chunk);
+                }
+                const node = createInlineImageElement(match[1]);
+                editor.appendChild(node);
+                editor.appendChild(document.createElement('br'));
+                lastIndex = regex.lastIndex;
+            }
+
+            const remaining = text.slice(lastIndex);
+            if (remaining) {
+                appendTextChunk(editor, remaining);
+            }
+
+            updateEditorEmptyState(editor);
+        }
+
+        function serializeEditorNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.nodeValue || '';
+            }
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const element = node;
+                if (element.classList.contains('inline-image')) {
+                    const encoded = element.dataset.img || '';
+                    const dataUrl = decodeContent(encoded);
+                    return dataUrl ? `[[img:${dataUrl}]]` : '';
+                }
+                if (element.tagName === 'BR') {
+                    return '\n';
+                }
+                let text = '';
+                element.childNodes.forEach(child => {
+                    text += serializeEditorNode(child);
+                });
+                if (element.tagName === 'DIV' || element.tagName === 'P') {
+                    return text + '\n';
+                }
+                return text;
+            }
+            return '';
+        }
+
+        function getEditorContent(editor) {
+            if (!editor) return '';
+            let result = '';
+            editor.childNodes.forEach((node, index) => {
+                const isBlockish = node.nodeType === Node.ELEMENT_NODE && ['DIV', 'P', 'LI'].includes(node.tagName);
+                if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('inline-image')) {
+                    // Ensure newline before image if there's any content before it
+                    if (result.length > 0 && !result.endsWith('\n')) {
+                        result += '\n';
+                    }
+                } else if (isBlockish && result.length > 0 && !result.endsWith('\n')) {
+                    // Ensure a break before blocky nodes when previous sibling was inline text
+                    result += '\n';
+                }
+                result += serializeEditorNode(node);
+            });
+            return result;
+        }
+
+        function insertNodeAtCursor(editor, node) {
+            if (!editor || !node) return;
+            const selection = window.getSelection();
+            if (!selection || !selection.rangeCount) {
+                editor.appendChild(node);
+                focusEditorEnd(editor);
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            if (!editor.contains(range.commonAncestorContainer)) {
+                editor.appendChild(node);
+                focusEditorEnd(editor);
+                return;
+            }
+
+            range.deleteContents();
+            range.insertNode(node);
+            range.setStartAfter(node);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            updateEditorEmptyState(editor);
+        }
+
+        function insertTextAtCursor(editor, text) {
+            if (!editor || !text) return;
+            const lines = text.split(/\r?\n/);
+            lines.forEach((line, index) => {
+                if (line) {
+                    insertNodeAtCursor(editor, document.createTextNode(line));
+                }
+                if (index < lines.length - 1) {
+                    insertNodeAtCursor(editor, document.createElement('br'));
+                }
+            });
+            updateEditorEmptyState(editor);
+        }
+
+        function insertImageIntoEditor(editor, dataUrl) {
+            const selection = window.getSelection();
+            let needsBrBefore = false;
+            
+            if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const container = range.commonAncestorContainer;
+                
+                // Check if cursor is at the end of a text node or after non-BR content
+                if (container.nodeType === Node.TEXT_NODE) {
+                    const text = container.nodeValue || '';
+                    const offset = range.startOffset;
+                    // If there's text before cursor position
+                    if (offset > 0 && text.substring(0, offset).trim()) {
+                        needsBrBefore = true;
+                    }
+                } else if (container.nodeType === Node.ELEMENT_NODE) {
+                    // Check previous sibling at cursor position
+                    const childBefore = container.childNodes[range.startOffset - 1];
+                    if (childBefore) {
+                        if (childBefore.nodeType === Node.TEXT_NODE) {
+                            needsBrBefore = true;
+                        } else if (childBefore.tagName !== 'BR') {
+                            needsBrBefore = true;
+                        }
+                    }
+                }
+            }
+            
+            if (needsBrBefore) {
+                insertNodeAtCursor(editor, document.createElement('br'));
+            }
+            
+            const node = createInlineImageElement(dataUrl);
+            insertNodeAtCursor(editor, node);
+            insertNodeAtCursor(editor, document.createElement('br'));
+        }
+
+        function focusEditorEnd(editor) {
+            if (!editor) return;
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(editor);
+            range.collapse(false);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        function isEditorEmpty(editor) {
+            if (!editor) return true;
+            const hasImages = editor.querySelector('.inline-image');
+            const text = (editor.textContent || '').replace(/\u200B/g, '').trim();
+            return !hasImages && !text;
+        }
+
+        function updateEditorEmptyState(editor) {
+            if (!editor) return;
+            if (isEditorEmpty(editor)) {
+                editor.classList.add('is-empty');
+            } else {
+                editor.classList.remove('is-empty');
+            }
+        }
+
+        function normalizeEditorContent(editor) {
+            if (!editor) return;
+            const html = editor.innerHTML.replace(/\s+/g, '');
+            if (html === '<br>' || html === '<div><br></div>') {
+                editor.innerHTML = '';
+            }
+            updateEditorEmptyState(editor);
+        }
+
+        function setupRichEditor(editor) {
+            if (!editor || editor.dataset.richInit === 'true') return;
+            editor.dataset.richInit = 'true';
+
+            editor.addEventListener('paste', (event) => {
+                const clipboardData = event.clipboardData;
+                if (!clipboardData) return;
+
+                let imageFiles = [];
+                if (clipboardData.items && clipboardData.items.length) {
+                    imageFiles = Array.from(clipboardData.items)
+                        .filter(item => item.type && item.type.startsWith('image/'))
+                        .map(item => item.getAsFile())
+                        .filter(Boolean);
+                }
+
+                if (!imageFiles.length && clipboardData.files && clipboardData.files.length) {
+                    imageFiles = Array.from(clipboardData.files)
+                        .filter(file => file.type && file.type.startsWith('image/'));
+                }
+
+                if (imageFiles.length) {
+                    event.preventDefault();
+                    imageFiles.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const dataUrl = e.target?.result;
+                            if (typeof dataUrl === 'string') {
+                                insertImageIntoEditor(editor, dataUrl);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                    return;
+                }
+
+                const text = clipboardData.getData('text/plain');
+                if (text) {
+                    event.preventDefault();
+                    insertTextAtCursor(editor, text);
+                }
+            });
+
+            editor.addEventListener('input', () => normalizeEditorContent(editor));
+            editor.addEventListener('blur', () => normalizeEditorContent(editor));
+            normalizeEditorContent(editor);
+        }
+
+        function initializeCommentEditor() {
+            const editor = document.getElementById('commentEditor');
+            if (!editor) return;
+            setEditorContent(editor, '');
+            setupRichEditor(editor);
+        }
+
+        function initializeTicketDescriptionEditor() {
+            const editor = document.getElementById('ticketDescriptionEditor');
+            if (!editor) return;
+            setEditorContent(editor, '');
+            setupRichEditor(editor);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString();
+        }
+
+        function formatDateTime(dateTimeStr) {
+            if (!dateTimeStr) return '';
+            const date = new Date(dateTimeStr);
+            return date.toLocaleString();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === undefined || bytes === null) return '';
+            if (bytes === 0) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const index = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+            const size = bytes / Math.pow(1024, index);
+            return `${size >= 10 ? size.toFixed(0) : size.toFixed(1)} ${units[index]}`;
+        }
+
+        function formatProjectCode(projectId) {
+            if (!projectId) return '';
+            const clean = String(projectId).trim();
+            if (!clean) return '';
+            return clean.toUpperCase();
+        }
+
+        function formatProjectLabel(ticket) {
+            const projectId = ticket.project_id || '';
+            return projectId || 'Project';
+        }
+
+        function padTicketId(id) {
+            if (id === undefined || id === null) return '';
+            const num = parseInt(id, 10);
+            if (Number.isNaN(num)) return String(id);
+            return String(num).padStart(4, '0');
+        }
+
+        // Inline editing functionality
+        let currentlyEditing = null;
+        let openDetailMenu = null;
+
+        function closeDetailMenu() {
+            if (openDetailMenu) {
+                openDetailMenu.classList.remove('show');
+                openDetailMenu = null;
+            }
+        }
+
+        function toggleDetailMenu(event) {
+            event.stopPropagation();
+            const menu = event.currentTarget.closest('.detail-actions');
+            const dropdown = menu.querySelector('.detail-menu-dropdown');
+            const isOpen = dropdown.classList.contains('show');
+            closeDetailMenu();
+            if (!isOpen) {
+                dropdown.classList.add('show');
+                openDetailMenu = dropdown;
+            }
+        }
+
+        function handleDetailDelete(event, ticketId) {
+            event.stopPropagation();
+            closeDetailMenu();
+            deleteTicket(ticketId);
+        }
+
+        document.addEventListener('click', closeDetailMenu);
+
+        function makeEditable(element, type) {
+            const fieldCheck = element.getAttribute('data-field');
+            if (fieldCheck === 'project_id') {
+                return; // Project not editable after creation
+            }
+            if (currentlyEditing) return; // Prevent multiple edits
+            
+            currentlyEditing = element;
+            element.classList.add('editing');
+            
+            const projectId = element.getAttribute('data-project-id');
+            const ticketId = element.getAttribute('data-ticket-id');
+            const field = fieldCheck;
+            let currentValue = element.textContent.trim();
+            if (type === 'textarea') {
+                currentValue = decodeContent(element.getAttribute('data-raw-value')) || '';
+            }
+            const currentProjectId = field === 'project_id' ? (element.getAttribute('data-project-id') || '') : '';
+            
+            let inputElement;
+            
+            if (type === 'select') {
+                inputElement = document.createElement('select');
+                
+                if (field === 'issue_type') {
+                    ['Task', 'Bug', 'Feature', 'Story', 'Epic'].forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        if (opt === currentValue) option.selected = true;
+                        inputElement.appendChild(option);
+                    });
+                } else if (field === 'priority') {
+                    ['K1', 'K2', 'K3'].forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        if (opt === currentValue) option.selected = true;
+                        inputElement.appendChild(option);
+                    });
+                } else if (field === 'status') {
+                    ['Triage', 'In Progress', 'Done'].forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        if (opt === currentValue) option.selected = true;
+                        inputElement.appendChild(option);
+                    });
+                } else if (field === 'assignee') {
+                    const unassignedOpt = document.createElement('option');
+                    unassignedOpt.value = '';
+                    unassignedOpt.textContent = 'Unassigned';
+                    inputElement.appendChild(unassignedOpt);
+                    
+                    users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.username;
+                        option.textContent = user.username;
+                        if (user.username === currentValue) option.selected = true;
+                        inputElement.appendChild(option);
+                    });
+                } else if (field === 'project_id') {
+                    const placeholder = document.createElement('option');
+                    placeholder.value = '';
+                    placeholder.textContent = 'Select project';
+                    inputElement.appendChild(placeholder);
+
+                    const currentProjectId = element.getAttribute('data-project-id') || '';
+                    projects.forEach(p => {
+                        const option = document.createElement('option');
+                        option.value = p.id;
+                        option.textContent = p.id;
+                        if (p.id === currentProjectId) option.selected = true;
+                        inputElement.appendChild(option);
+                    });
+                }
+            } else if (type === 'date') {
+                inputElement = document.createElement('input');
+                inputElement.type = 'date';
+                // Convert display date back to YYYY-MM-DD format
+                if (currentValue !== 'Not set') {
+                    const dateParts = currentValue.match(/(\d{4}).(\d{1,2}).(\d{1,2})/);
+                    if (dateParts) {
+                        inputElement.value = `${dateParts[1]}-${dateParts[2].padStart(2, '0')}-${dateParts[3].padStart(2, '0')}`;
+                    }
+                }
+            } else if (type === 'textarea') {
+                inputElement = document.createElement('div');
+                inputElement.className = 'rich-editor comment-edit-area';
+                inputElement.contentEditable = 'true';
+                inputElement.dataset.placeholder = 'Edit description...';
+                setEditorContent(inputElement, currentValue);
+            } else {
+                inputElement = document.createElement('input');
+                inputElement.type = 'text';
+                inputElement.value = currentValue;
+            }
+            
+            element.textContent = '';
+            element.appendChild(inputElement);
+            inputElement.focus();
+            
+            if (type === 'textarea') {
+                setupRichEditor(inputElement);
+                focusEditorEnd(inputElement);
+            }
+            
+            if (type === 'input') {
+                inputElement.select();
+            }
+            
+            // Save on blur or Enter
+            const saveEdit = async () => {
+                if (!currentlyEditing) return;
+                
+                const newValue = type === 'textarea'
+                    ? getEditorContent(inputElement).replace(/\r/g, '')
+                    : inputElement.value.trim();
+                const oldValue = field === 'project_id' ? currentProjectId : currentValue;
+                
+                currentlyEditing = null;
+                element.classList.remove('editing');
+                
+                // Update display
+                if (field === 'project_id') {
+                    if (!newValue || newValue === oldValue) {
+                        element.textContent = oldValue ? `Project-${formatProjectCode(oldValue)}` : 'Not set';
+                        currentlyEditing = null;
+                        return;
+                    }
+                    element.textContent = `Project-${formatProjectCode(newValue)}`;
+                    element.setAttribute('data-project-id', newValue);
+                } else if (type === 'date') {
+                    element.textContent = newValue ? formatDate(newValue) : 'Not set';
+                } else if (type === 'textarea') {
+                    if (!editorHasContent(newValue)) {
+                        element.textContent = 'No description provided';
+                        element.dataset.rawValue = '';
+                    } else {
+                        element.innerHTML = renderRichText(newValue);
+                        element.dataset.rawValue = encodeContent(newValue);
+                    }
+                } else if (field === 'assignee' && !newValue) {
+                    element.textContent = 'Unassigned';
+                } else {
+                    element.textContent = newValue || oldValue;
+                }
+                
+                // Save to server if value changed
+                if (newValue !== oldValue && !(oldValue === 'Not set' && !newValue) && 
+                    !(oldValue === 'Unassigned' && !newValue) && 
+                    !(oldValue === 'No description provided' && !newValue)) {
+                    await autoSaveField(projectId, ticketId, field, newValue);
+                }
+            };
+            
+            inputElement.addEventListener('blur', saveEdit);
+            inputElement.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && type !== 'textarea') {
+                    e.preventDefault();
+                    saveEdit();
+                } else if (e.key === 'Escape') {
+                    currentlyEditing = null;
+                    element.classList.remove('editing');
+                    if (type === 'textarea') {
+                        if (currentValue) {
+                            element.innerHTML = renderRichText(currentValue);
+                            element.dataset.rawValue = encodeContent(currentValue);
+                        } else {
+                            element.textContent = 'No description provided';
+                            element.dataset.rawValue = '';
+                        }
+                    } else {
+                        element.textContent = currentValue;
+                    }
+                }
+            });
+        }
+
+        // Auto-save function
+        async function autoSaveField(projectId, ticketId, field, value) {
+            try {
+                const updateData = {};
+                updateData[field] = value;
+                
+                const response = await fetch(`${API_BASE}/api/projects/${projectId}/tickets/${ticketId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify(updateData)
+                });
+
+                if (response.ok) {
+                    showSaveIndicator();
+                    // Refresh ticket list and detail
+                    await loadTickets();
+                    await selectTicket(projectId, ticketId, false);
+                } else {
+                    alert('Failed to save changes');
+                }
+            } catch (error) {
+                console.error('Error saving field:', error);
+                alert('Error saving: ' + error.message);
+            }
+        }
+
+        // Show save indicator
+        function showSaveIndicator() {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // My Page functions
+        async function openMyPage() {
+            // Hide app container, show my page
+            document.getElementById('appContainer').classList.remove('active');
+            document.getElementById('myPageContainer').classList.add('active');
+            
+            // Update user name
+            document.getElementById('currentUser2').textContent = currentUser;
+            
+            // Show users tab only for managers and root
+            if (currentUserRole >= 2) {
+                document.getElementById('usersTabBtn').style.display = 'block';
+                document.getElementById('databaseTabBtn').style.display = 'block';
+                document.getElementById('addProjectBtn').style.display = 'inline-flex';
+            } else {
+                document.getElementById('usersTabBtn').style.display = 'none';
+                document.getElementById('databaseTabBtn').style.display = 'none';
+                document.getElementById('addProjectBtn').style.display = 'none';
+            }
+
+            const profileTabButton = document.querySelector('.mypage-tab[data-tab="profile"]');
+            switchTab('profile', profileTabButton);
+
+            const loaders = [loadProfile(), loadProjects()];
+            if (currentUserRole >= 2) {
+                loaders.push(loadAllUsers());
+            }
+            await Promise.all(loaders);
+        }
+
+        function closeMyPage() {
+            // Hide my page, show app container
+            document.getElementById('myPageContainer').classList.remove('active');
+            document.getElementById('appContainer').classList.add('active');
+            hideAddProjectForm();
+        }
+
+        function switchTab(tabName, buttonEl) {
+            // Update tab buttons
+            document.querySelectorAll('.mypage-tab').forEach(tab => tab.classList.remove('active'));
+            if (buttonEl) {
+                buttonEl.classList.add('active');
+            } else {
+                const fallback = document.querySelector(`.mypage-tab[data-tab="${tabName}"]`);
+                if (fallback) fallback.classList.add('active');
+            }
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            const target = document.getElementById(tabName + 'Tab');
+            if (target) {
+                target.classList.add('active');
+            }
+
+            if (tabName === 'profile') {
+                loadProfile();
+            }
+        }
+
+        function setStatus(elementId, message, isError = false) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.textContent = message || '';
+            el.style.color = isError ? '#d32f2f' : '#4b5563';
+        }
+
+        function fillProfileForm(profile) {
+            if (!profile) return;
+            document.getElementById('profileUsername').value = profile.username || '';
+            document.getElementById('profileGivenName').value = profile.given_name || '';
+            document.getElementById('profileFamilyName').value = profile.family_name || '';
+            document.getElementById('profileEmail').value = profile.email || '';
+            document.getElementById('profileMobile').value = profile.mobile || '';
+        }
+
+        async function loadProfile() {
+            if (!sessionId) return;
+            try {
+                const response = await fetch(`${API_BASE}/api/profile`, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    profileData = data.profile || null;
+                    fillProfileForm(profileData);
+                    setStatus('profileStatus', 'Profile loaded');
+                } else {
+                    setStatus('profileStatus', data.error || 'Failed to load profile', true);
+                }
+            } catch (error) {
+                setStatus('profileStatus', `Error: ${error.message}`, true);
+            }
+        }
+
+        async function saveProfile() {
+            const givenName = document.getElementById('profileGivenName').value.trim();
+            const familyName = document.getElementById('profileFamilyName').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            const mobile = document.getElementById('profileMobile').value.trim();
+
+            if (!givenName || !familyName) {
+                setStatus('profileStatus', '이름과 성을 입력해주세요.', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({
+                        given_name: givenName,
+                        family_name: familyName,
+                        email,
+                        mobile
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    setStatus('profileStatus', 'Profile saved');
+                    showSaveIndicator();
+                    await loadProfile();
+                } else {
+                    setStatus('profileStatus', data.error || 'Failed to save profile', true);
+                }
+            } catch (error) {
+                setStatus('profileStatus', `Error: ${error.message}`, true);
+            }
+        }
+
+        async function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!currentPassword || !newPassword) {
+                setStatus('passwordStatus', '현재 비밀번호와 새 비밀번호를 입력해주세요.', true);
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                setStatus('passwordStatus', '새 비밀번호가 일치하지 않습니다.', true);
+                return;
+            }
+
+            if (newPassword.length < 4) {
+                setStatus('passwordStatus', '비밀번호는 4자 이상이어야 합니다.', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/password`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({
+                        current_password: currentPassword,
+                        new_password: newPassword
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    setStatus('passwordStatus', 'Password updated');
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    showSaveIndicator();
+                } else {
+                    setStatus('passwordStatus', data.error || 'Failed to update password', true);
+                }
+            } catch (error) {
+                setStatus('passwordStatus', `Error: ${error.message}`, true);
+            }
+        }
+
+        // Project management
+        async function loadProjects() {
+            try {
+                const response = await fetch(`${API_BASE}/api/projects`, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    projects = data.projects || [];
+                    renderProjects();
+                    populateProjectSelect();
+                    populateProjectFilter();
+                }
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        function populateProjectSelect() {
+            const projectSelect = document.getElementById('ticketProject');
+            if (!projectSelect) return;
+            projectSelect.innerHTML = '<option value="">Select project</option>';
+            projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.id}`;
+                projectSelect.appendChild(option);
+            });
+        }
+
+        function populateProjectFilter() {
+            const filterSelect = document.getElementById('searchProjectFilter');
+            if (!filterSelect) return;
+            const current = filterSelect.value;
+            filterSelect.innerHTML = '<option value="">All projects</option>';
+            projects.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = p.id;
+                filterSelect.appendChild(option);
+            });
+            if (current) {
+                const exists = Array.from(filterSelect.options).some(opt => opt.value === current);
+                if (exists) {
+                    filterSelect.value = current;
+                }
+            }
+        }
+
+        function renderProjects() {
+            const tbody = document.getElementById('projectsList');
+            if (projects.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="table-empty">
+                            <div class="table-empty-icon">📁</div>
+                            <div>No projects found</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = projects.map(p => `
+                <tr>
+                    <td><strong>📌 ${p.id}</strong></td>
+                    <td class="description-cell" style="color: #666;" title="${p.description || 'No description'}">${p.description || '<em style="color: #999;">No description</em>'}</td>
+                    <td><span style="color: #667eea;">👤 ${p.created_by}</span></td>
+                    <td style="font-size: 13px; color: #666;">${formatDateTime(p.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function showAddProjectForm() {
+            document.getElementById('addProjectForm').style.display = 'block';
+            document.getElementById('addProjectBtn').style.display = 'none';
+        }
+
+        function hideAddProjectForm() {
+            document.getElementById('addProjectForm').style.display = 'none';
+            document.getElementById('addProjectBtn').style.display = 'inline-flex';
+            document.getElementById('newProjectId').value = '';
+            document.getElementById('newProjectDesc').value = '';
+            document.getElementById('projectIdSuggestions').style.display = 'none';
+        }
+
+        // Project ID input validation and suggestions
+        function isEnglishOnly(event) {
+            const char = String.fromCharCode(event.which);
+            // Allow English letters, numbers, hyphen, underscore
+            if (!/[a-zA-Z0-9\-_]/.test(char)) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+
+        function handleProjectIdInput(event) {
+            const input = event.target.value.trim();
+            const suggestionsDiv = document.getElementById('projectIdSuggestions');
+            const chipsDiv = document.getElementById('suggestionChips');
+            
+            if (input.length >= 2) {
+                const suggestions = generateProjectIdSuggestions(input);
+                if (suggestions.length > 0) {
+                    chipsDiv.innerHTML = suggestions.map(s => 
+                        `<span class="suggestion-chip" onclick="selectSuggestion('${s}')">${s}</span>`
+                    ).join('');
+                    suggestionsDiv.style.display = 'block';
+                } else {
+                    suggestionsDiv.style.display = 'none';
+                }
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+
+        function generateProjectIdSuggestions(input) {
+            const upperInput = input.toUpperCase();
+            const suggestions = [];
+            
+            // Common project prefixes
+            const prefixes = ['PROJ', 'PRJ', 'DEV', 'PROD', 'TEST', 'DEMO'];
+            const suffixes = ['2026', 'APP', 'SYS', 'WEB', 'API', 'SERVICE'];
+            
+            // Suggestion 1: Uppercase version
+            if (input !== upperInput) {
+                suggestions.push(upperInput);
+            }
+            
+            // Suggestion 2: With common prefix
+            if (upperInput.length <= 4) {
+                prefixes.forEach(prefix => {
+                    if (prefix.startsWith(upperInput)) {
+                        suggestions.push(prefix);
+                    } else if (!upperInput.startsWith(prefix)) {
+                        suggestions.push(prefix + '_' + upperInput);
+                    }
+                });
+            }
+            
+            // Suggestion 3: With suffix
+            suffixes.forEach(suffix => {
+                if (suggestions.length < 6) {
+                    suggestions.push(upperInput + '_' + suffix);
+                }
+            });
+            
+            // Suggestion 4: With year
+            if (!upperInput.includes('2026') && suggestions.length < 8) {
+                suggestions.push(upperInput + '_2026');
+            }
+            
+            // Return unique suggestions, max 8
+            return [...new Set(suggestions)].slice(0, 8);
+        }
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('newProjectId').value = suggestion;
+            document.getElementById('projectIdSuggestions').style.display = 'none';
+        }
+
+        async function createProject() {
+            const projectIdElement = document.getElementById('newProjectId');
+            const projectDescElement = document.getElementById('newProjectDesc');
+            
+            console.log('Elements:', {
+                projectIdElement,
+                projectDescElement
+            });
+            
+            if (!projectIdElement || !projectDescElement) {
+                console.error('Form elements not found');
+                alert('Form initialization error. Please try closing and reopening the form.');
+                return;
+            }
+            
+            const projectId = projectIdElement.value.trim();
+            const projectName = projectId; // Name removed from form; default to ID
+            const projectDesc = projectDescElement.value.trim();
+            
+            console.log('Values after trim:', { projectId, projectDesc });
+
+            if (!projectId) {
+                console.error('Validation failed:', { projectId: projectId || '(empty)' });
+                alert('Project ID is required');
+                return;
+            }
+            
+            // Validate project ID is English only
+            if (!/^[a-zA-Z0-9\-_]+$/.test(projectId)) {
+                console.error('Invalid project ID format:', projectId);
+                alert('Project ID must contain only English letters, numbers, hyphen(-), or underscore(_)');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/projects`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({
+                        id: projectId,
+                        name: projectName,
+                        description: projectDesc
+                    })
+                });
+
+                if (response.ok) {
+                    hideAddProjectForm();
+                    await loadProjects();
+                    showSaveIndicator();
+                } else {
+                    const data = await response.json();
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error creating project: ' + error.message);
+            }
+        }
+
+        // User management
+        async function loadAllUsers() {
+            try {
+                const response = await fetch(`${API_BASE}/api/users/all`, {
+                    headers: {
+                        'Session-Id': sessionId
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    allUsers = data.users || [];
+                    renderUsers();
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersList');
+            if (allUsers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="table-empty">
+                            <div class="table-empty-icon">👥</div>
+                            <div>No users found</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = allUsers.map(u => {
+                const canEdit = u.username !== 'root' && u.username !== currentUser && u.role < currentUserRole;
+                const roleNames = ['Unauthorized', 'User', 'Manager', 'Root'];
+                const selectableRoles = [0, 1, 2, 3].filter(r => r <= currentUserRole);
+
+                const options = canEdit
+                    ? selectableRoles.map(r => `<option value="${r}" ${r === u.role ? 'selected' : ''}>${roleNames[r]}</option>`).join('')
+                    : `<option selected>${roleNames[u.role]}</option>`;
+                const disabledAttr = canEdit ? '' : 'disabled';
+                const changeHandler = canEdit ? `onchange="handleRoleChange('${u.username}', this.value)"` : '';
+
+                return `
+                    <tr>
+                        <td><strong>🆔 ${u.username}</strong></td>
+                        <td>👤 ${u.given_name} ${u.family_name}</td>
+                        <td style="color: #666;">✉️ ${u.email}</td>
+                        <td style="color: #666;">📱 ${u.mobile}</td>
+                        <td>
+                            <span class="role-badge role-${u.role}">${roleNames[u.role]}</span>
+                        </td>
+                        <td>
+                            <select class="role-select" ${disabledAttr} ${changeHandler}>
+                                ${options}
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function handleRoleChange(username, newRole) {
+            const roleNames = ['Unauthorized', 'User', 'Manager', 'Root'];
+            if (!confirm(`Change ${username}'s role to ${roleNames[newRole]}?`)) {
+                loadAllUsers();
+                return;
+            }
+            updateUserRole(username, parseInt(newRole));
+        }
+
+        async function updateUserRole(username, newRole) {
+            newRole = parseInt(newRole);
+            
+            if (!confirm(`Change ${username}'s role?`)) {
+                await loadAllUsers();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/users/${username}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({ role: newRole })
+                });
+
+                if (response.ok) {
+                    await loadAllUsers();
+                    showSaveIndicator();
+                } else {
+                    const data = await response.json();
+                    alert('Error: ' + data.error);
+                    await loadAllUsers();
+                }
+            } catch (error) {
+                alert('Error updating role: ' + error.message);
+                await loadAllUsers();
+            }
+        }
+
+        // Project ID input validation and suggestions
+        function isEnglishOnly(event) {
+            const char = String.fromCharCode(event.which);
+            // Allow English letters, numbers, hyphen, underscore
+            if (!/[a-zA-Z0-9\-_]/.test(char)) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+
+        function handleProjectIdInput(event) {
+            const input = event.target.value.trim();
+            const suggestionsDiv = document.getElementById('projectIdSuggestions');
+            const chipsDiv = document.getElementById('suggestionChips');
+            
+            if (input.length >= 2) {
+                const suggestions = generateProjectIdSuggestions(input);
+                if (suggestions.length > 0) {
+                    chipsDiv.innerHTML = suggestions.map(s => 
+                        `<span class="suggestion-chip" onclick="selectSuggestion('${s}')">${s}</span>`
+                    ).join('');
+                    suggestionsDiv.style.display = 'block';
+                } else {
+                    suggestionsDiv.style.display = 'none';
+                }
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+
+        function generateProjectIdSuggestions(input) {
+            const upperInput = input.toUpperCase();
+            const suggestions = [];
+            
+            // Common project prefixes
+            const prefixes = ['PROJ', 'PRJ', 'DEV', 'PROD', 'TEST', 'DEMO'];
+            const suffixes = ['2026', 'APP', 'SYS', 'WEB', 'API', 'SERVICE'];
+            
+            // Suggestion 1: Uppercase version
+            if (input !== upperInput) {
+                suggestions.push(upperInput);
+            }
+            
+            // Suggestion 2: With common prefix
+            if (upperInput.length <= 4) {
+                prefixes.forEach(prefix => {
+                    if (prefix.startsWith(upperInput)) {
+                        suggestions.push(prefix);
+                    } else if (!upperInput.startsWith(prefix)) {
+                        suggestions.push(prefix + '_' + upperInput);
+                    }
+                });
+            }
+            
+            // Suggestion 3: With suffix
+            suffixes.forEach(suffix => {
+                if (suggestions.length < 6) {
+                    suggestions.push(upperInput + '_' + suffix);
+                }
+            });
+            
+            // Suggestion 4: With year
+            if (!upperInput.includes('2026') && suggestions.length < 8) {
+                suggestions.push(upperInput + '_2026');
+            }
+            
+            // Return unique suggestions, max 8
+            return [...new Set(suggestions)].slice(0, 8);
+        }
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('newProjectId').value = suggestion;
+            document.getElementById('projectIdSuggestions').style.display = 'none';
+        }
+
+        // Database Administration Functions
+        async function refreshTableList() {
+            if (currentUserRole < 2) {
+                alert('Access denied. Manager or Root role required.');
+                return;
+            }
+
+            const btn = document.getElementById('dbRefreshBtn');
+            if (btn) {
+                if (!btn.dataset.originalText) btn.dataset.originalText = btn.textContent;
+                btn.disabled = true;
+                btn.classList.add('btn-loading');
+                btn.textContent = 'Refreshing...';
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/database/tables`, {
+                    headers: { 'Session-Id': sessionId }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const select = document.getElementById('dbTableSelect');
+                    select.innerHTML = '<option value="">-- Select a table --</option>';
+                    data.tables.forEach(table => {
+                        select.innerHTML += `<option value="${table}">${table}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading tables:', error);
+                alert('Error loading tables: ' + error.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.classList.remove('btn-loading');
+                    btn.textContent = btn.dataset.originalText || '🔄 Refresh';
+                }
+            }
+        }
+
+        async function loadTableData() {
+            const tableName = document.getElementById('dbTableSelect').value;
+            if (!tableName) {
+                document.getElementById('dbTableDataSection').style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/database/table/${tableName}`, {
+                    headers: { 'Session-Id': sessionId }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    displayTableData(tableName, data.columns, data.rows);
+                }
+            } catch (error) {
+                console.error('Error loading table data:', error);
+                alert('Error loading table data: ' + error.message);
+            }
+        }
+
+        function displayTableData(tableName, columns, rows) {
+            document.getElementById('currentTableName').textContent = `Table: ${tableName}`;
+            document.getElementById('dbTableDataSection').style.display = 'block';
+            document.getElementById('dbQueryResult').style.display = 'none';
+
+            const thead = document.getElementById('dbTableHead');
+            const tbody = document.getElementById('dbTableBody');
+
+            // Create header - columns is array of {name, type, pk}
+            thead.innerHTML = '<tr>' + columns.map(col => `<th>${col.name}</th>`).join('') + '<th>Actions</th></tr>';
+
+            // Find primary key column
+            const pkColumn = columns.find(c => c.pk === 1) || columns[0];
+            const pkColumnName = pkColumn.name;
+
+            // Create rows - rows is array of arrays
+            tbody.innerHTML = rows.map((row, idx) => {
+                // row is an array of values matching column order
+                const cells = row.map(value => `<td>${escapeHtml(String(value !== null && value !== undefined ? value : ''))}</td>`).join('');
+                const primaryKeyIndex = columns.findIndex(c => c.name === pkColumnName);
+                const primaryKey = row[primaryKeyIndex];
+                
+                // Store row data as JSON for edit
+                const rowDataJson = JSON.stringify(Object.fromEntries(columns.map((col, i) => [col.name, row[i]])));
+                
+                return `<tr>${cells}<td>
+                    <button class="table-action-btn btn-edit" onclick='editRecord("${tableName}", "${pkColumnName}", "${primaryKey}", ${idx}, ${rowDataJson.replace(/'/g, "&apos;")})'>Edit</button>
+                    <button class="table-action-btn" style="background: #dc3545; color: white;" onclick='deleteRecord("${tableName}", "${pkColumnName}", "${primaryKey}")'>Delete</button>
+                </td></tr>`;
+            }).join('');
+        }
+
+        function toggleQuerySection() {
+            const section = document.getElementById('dbQuerySection');
+            const btn = document.getElementById('showQueryBtn');
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                btn.style.display = 'none';
+            } else {
+                section.style.display = 'none';
+                btn.style.display = 'inline-block';
+            }
+        }
+
+        async function executeQuery() {
+            const query = document.getElementById('sqlQuery').value.trim();
+            if (!query) {
+                alert('Please enter a SQL query');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/database/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('dbQueryResult').style.display = 'block';
+                    document.getElementById('queryResultText').textContent = JSON.stringify(data, null, 2);
+                } else {
+                    alert('Query error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error executing query:', error);
+                alert('Error executing query: ' + error.message);
+            }
+        }
+
+        function showAddRecordModal() {
+            const tableName = document.getElementById('dbTableSelect').value;
+            if (!tableName) return;
+
+            // This would open a modal - simplified version with prompt
+            const record = prompt('Enter record data as JSON (e.g., {"name":"value"})');
+            if (record) {
+                try {
+                    const data = JSON.parse(record);
+                    addRecord(tableName, data);
+                } catch (e) {
+                    alert('Invalid JSON format');
+                }
+            }
+        }
+
+        async function addRecord(tableName, data) {
+            try {
+                const response = await fetch(`${API_BASE}/api/database/table/${tableName}/record`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Record added successfully');
+                    loadTableData();
+                } else {
+                    const result = await response.json();
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error adding record: ' + error.message);
+            }
+        }
+
+        function editRecord(tableName, pkColumn, pkValue, rowIndex, currentData) {
+            const record = prompt('Enter updated record data as JSON', JSON.stringify(currentData, null, 2));
+            if (record) {
+                try {
+                    const data = JSON.parse(record);
+                    updateRecord(tableName, pkColumn, pkValue, data);
+                } catch (e) {
+                    alert('Invalid JSON format: ' + e.message);
+                }
+            }
+        }
+
+        async function updateRecord(tableName, pkColumn, pkValue, data) {
+            try {
+                const response = await fetch(`${API_BASE}/api/database/table/${tableName}/record/${pkValue}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Session-Id': sessionId
+                    },
+                    body: JSON.stringify({ pkColumn, data })
+                });
+
+                if (response.ok) {
+                    alert('Record updated successfully');
+                    loadTableData();
+                } else {
+                    const result = await response.json();
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error updating record: ' + error.message);
+            }
+        }
+
+        async function deleteRecord(tableName, pkColumn, pkValue) {
+            if (!confirm(`Delete record with ${pkColumn} = ${pkValue}?`)) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/database/table/${tableName}/record/${pkValue}?pkColumn=${pkColumn}`, {
+                    method: 'DELETE',
+                    headers: { 'Session-Id': sessionId }
+                });
+
+                if (response.ok) {
+                    alert('Record deleted successfully');
+                    loadTableData();
+                } else {
+                    const result = await response.json();
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error deleting record: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

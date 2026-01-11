@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">R4 Project Manager</title>
+  <desc id="desc">Purple gradient badge with R4 initials</desc>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#667eea" />
+      <stop offset="100%" stop-color="#764ba2" />
+    </linearGradient>
+    <linearGradient id="g2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a5b4fc" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.45" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g)" />
+  <path d="M52 20c-5.5 6.5-13.7 12-23 12-3.3 0-6.8-0.7-9-1.6v-6.4c3 1.4 6.2 2 9 2 6 0 11.5-2.5 16-6z" fill="url(#g2)" />
+  <text x="15" y="42" fill="#ffffff" font-family="'Segoe UI', Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="0.5">R4</text>
+</svg>

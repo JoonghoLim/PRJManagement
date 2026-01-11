@@ -583,6 +583,10 @@ class R4PManagerHandler(BaseHTTPRequestHandler):
         if path == '/' or path == '/index.html':
             self._serve_file('index.html', 'text/html')
             return
+        if path == '/favicon.svg':
+            # Serve project favicon
+            self._serve_file('favicon.svg', 'image/svg+xml')
+            return
         
         # API endpoints
         if path == '/api/profile':
